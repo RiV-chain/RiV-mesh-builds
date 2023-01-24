@@ -1,0 +1,3 @@
+[submodule "RiV-mesh"]
+	path = RiV-mesh
+	url = git@github.com:RiV-chain/RiV-mesh.git
