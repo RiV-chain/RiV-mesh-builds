@@ -309,7 +309,7 @@ build_msi(){
   # Generate the MSI
   CANDLEFLAGS="-nologo"
   LIGHTFLAGS="-nologo -spdb -sice:ICE71 -sice:ICE61"
-  wixbin/candle $CANDLEFLAGS -out ${PKGNAME}-${PKGVERSION}-${PKGARCH}.wixobj -arch ${PKGARCH} wix.xml && \
+  wixbin/candle $CANDLEFLAGS -out ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.wixobj -arch ${PKGARCH} wix.xml && \
   wixbin/light $LIGHTFLAGS -ext WixUIExtension -ext WixUtilExtension -out ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.msi ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.wixobj
 }
 
