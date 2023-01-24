@@ -147,9 +147,9 @@ if command -v systemctl >/dev/null; then
 fi
 EOF
 
-cp mesh /tmp/$PKGNAME/usr/bin/
-cp meshctl /tmp/$PKGNAME/usr/bin/
-cp mesh-ui /tmp/$PKGNAME/usr/bin/
+cp RiV-mesh/mesh /tmp/$PKGNAME/usr/bin/
+cp RiV-mesh/meshctl /tmp/$PKGNAME/usr/bin/
+cp RiV-mesh/mesh-ui /tmp/$PKGNAME/usr/bin/
 ln -s /usr/bin/meshctl /tmp/$PKGNAME/usr/local/bin/meshctl
 cp contrib/systemd/*.service /tmp/$PKGNAME/etc/systemd/system/
 cp /tmp/$PKGNAME/usr/share/applications/riv.desktop /tmp/$PKGNAME/etc/xdg/autostart
