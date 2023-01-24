@@ -10,9 +10,9 @@ then
   exit 1
 fi
 
-PKGBRANCH=$(basename "$(git name-rev --name-only HEAD)")
-PKG=$(sh contrib/semver/name.sh)
-PKGVERSION=$(sh contrib/semver/version.sh --bare)
+PKGBRANCH=$(sh -c 'cd RiV-mesh && basename `git name-rev --name-only HEAD`')
+PKG=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
+PKGVERSION=$(sh -c 'cd RiV-mesh && contrib/semver/version.sh --bare')
 PKGARCH=${PKGARCH-amd64}
 PKGNAME=$PKG-$PKGVERSION-$PKGARCH-nogui
 PKGFILE=$PKGNAME.deb
@@ -22,13 +22,13 @@ if [ $PKGBRANCH = "master" ]; then
   PKGREPLACES=mesh-develop
 fi
 
-if [ $PKGARCH = "amd64" ]; then GOARCH=amd64 GOOS=linux ./build
-elif [ $PKGARCH = "i386" ]; then GOARCH=386 GOOS=linux ./build
-elif [ $PKGARCH = "mipsel" ]; then GOARCH=mipsle GOOS=linux ./build
-elif [ $PKGARCH = "mips" ]; then GOARCH=mips64 GOOS=linux ./build
-elif [ $PKGARCH = "armhf" ]; then GOARCH=arm GOOS=linux GOARM=6 ./build
-elif [ $PKGARCH = "arm64" ]; then GOARCH=arm64 GOOS=linux ./build
-elif [ $PKGARCH = "armel" ]; then GOARCH=arm GOOS=linux GOARM=5 ./build
+if [ $PKGARCH = "amd64" ]; then (cd RiV-mesh && GOARCH=amd64 GOOS=linux ./build)
+elif [ $PKGARCH = "i386" ]; then (cd RiV-mesh && GOARCH=386 GOOS=linux ./build)
+elif [ $PKGARCH = "mipsel" ]; then (cd RiV-mesh && GOARCH=mipsle GOOS=linux ./build)
+elif [ $PKGARCH = "mips" ]; then (cd RiV-mesh && GOARCH=mips64 GOOS=linux ./build)
+elif [ $PKGARCH = "armhf" ]; then (cd RiV-mesh && GOARCH=arm GOOS=linux GOARM=6 ./build)
+elif [ $PKGARCH = "arm64" ]; then (cd RiV-mesh && GOARCH=arm64 GOOS=linux ./build)
+elif [ $PKGARCH = "armel" ]; then (cd RiV-mesh && GOARCH=arm GOOS=linux GOARM=5 ./build)
 else
   echo "Specify PKGARCH=amd64,i386,mips,mipsel,armhf,arm64,armel"
   exit 1
@@ -110,8 +110,8 @@ if command -v systemctl >/dev/null; then
 fi
 EOF
 
-cp mesh /tmp/$PKGNAME/usr/bin/
-cp meshctl /tmp/$PKGNAME/usr/bin/
+cp RiV-mesh/mesh /tmp/$PKGNAME/usr/bin/
+cp RiV-mesh/meshctl /tmp/$PKGNAME/usr/bin/
 ln -s /usr/bin/meshctl /tmp/$PKGNAME/usr/local/bin/meshctl
 if [ "$LOGLEVEL" = "DEBUG" ]; then cp contrib/systemd/mesh-debug.service /tmp/$PKGNAME/etc/systemd/system/mesh.service
 else
