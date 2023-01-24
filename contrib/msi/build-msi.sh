@@ -317,7 +317,7 @@ sign_msi() {
   #Sign MSI
   if [[ "${SIGN}" == "sign" ]];
   then
-    cmd \""/c signtool sign /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a ${PKGNAME}-${PKGVERSION}-${PKGARCH}.msi"\"
+    cmd \""/c signtool sign /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.msi"\"
   fi
 }
 
