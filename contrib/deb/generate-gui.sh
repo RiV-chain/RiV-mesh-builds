@@ -10,9 +10,9 @@ then
   exit 1
 fi
 
-PKGBRANCH=$(basename `git name-rev --name-only HEAD`)
-PKG=$(sh contrib/semver/name.sh)
-PKGVERSION=$(sh contrib/semver/version.sh --bare)
+PKGBRANCH=$(sh -c 'cd RiV-mesh && basename `git name-rev --name-only HEAD`')
+PKG=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
+PKGVERSION=$(sh -c 'cd RiV-mesh && contrib/semver/version.sh --bare')
 PKGARCH=${PKGARCH-amd64}
 PKGNAME=$PKG-$PKGVERSION-$PKGARCH
 PKGFILE=$PKGNAME.deb
@@ -22,8 +22,8 @@ if [ $PKGBRANCH = "master" ]; then
   PKGREPLACES=mesh-develop
 fi
 
-if [ $PKGARCH = "amd64" ]; then GOARCH=amd64 GOOS=linux ./build
-elif [ $PKGARCH = "i386" ]; then GOARCH=386 GOOS=linux ./build
+if [ $PKGARCH = "amd64" ]; then (cd RiV-mesh && GOARCH=amd64 GOOS=linux ./build)
+elif [ $PKGARCH = "i386" ]; then (cd RiV-mesh && GOARCH=386 GOOS=linux ./build)
 else
   echo "Specify PKGARCH=amd64,i386,mips,mipsel,armhf,arm64,armel"
   exit 1
