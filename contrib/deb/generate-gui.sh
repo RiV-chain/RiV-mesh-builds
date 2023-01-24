@@ -46,7 +46,7 @@ chmod 0775 /tmp/$PKGNAME/ -R
 for resolution in 16x16 24x24 32x32 48x48 64x64 192x192 256x256 512x512; do
   echo "Converting icon for: $resolution"
   mkdir -p /tmp/$PKGNAME/usr/share/icons/hicolor/$resolution/apps && \
-  convert -colorspace sRGB ./riv.png -resize $resolution PNG8:/tmp/$PKGNAME/usr/share/icons/hicolor/$resolution/apps/riv.png  && \
+  convert -colorspace sRGB RiV-mesh/riv.png -resize $resolution PNG8:/tmp/$PKGNAME/usr/share/icons/hicolor/$resolution/apps/riv.png  && \
   chmod 644 /tmp/$PKGNAME/usr/share/icons/hicolor/$resolution/apps/riv.png
 done
 
