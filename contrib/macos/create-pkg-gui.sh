@@ -49,8 +49,8 @@ build_mesh_ui
 # Check if we can find the files we need - they should
 # exist if you are running this script from the root of
 # the RiV-mesh repo and you have ran ./build
-test -f mesh || (echo "mesh binary not found"; exit 1)
-test -f meshctl || (echo "meshctl binary not found"; exit 1)
+test -f RiV-mesh/mesh || (echo "mesh binary not found"; exit 1)
+test -f RiV-mesh/meshctl || (echo "meshctl binary not found"; exit 1)
 test -f mesh-ui || (echo "mesh-ui binary not found"; exit 1)
 test -f contrib/macos/mesh.plist || (echo "contrib/macos/mesh.plist not found"; exit 1)
 test -f contrib/semver/version.sh || (echo "contrib/semver/version.sh not found"; exit 1)
