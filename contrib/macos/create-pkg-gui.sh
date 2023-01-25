@@ -116,8 +116,8 @@ chmod 755 pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS/mesh-ui
 chmod 755 pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS/open-mesh-ui
 
 # Work out metadata for the package info
-PKGNAME=$(sh contrib/semver/name.sh)
-PKGVERSION=$(sh contrib/semver/version.sh --bare)
+PKGNAME=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
+PKGVERSION=$(sh -c 'RiV-mesh && contrib/semver/version.sh --bare')
 
 # Create the Info.plist file
 cat > pkgbuild/root/Applications/RiV-mesh.app/Contents/Info.plist << EOF
