@@ -47,7 +47,7 @@ else
   exit 1
 fi
 
-cd RiV-mesh && ./build
+(cd RiV-mesh && ./build)
 build_mesh_ui
 
 echo "Building $PKGFILE"
