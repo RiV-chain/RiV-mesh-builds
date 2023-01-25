@@ -23,7 +23,7 @@ if [ $PKGBRANCH = "master" ]; then
 fi
 
 buildbin() {
-  local CMD=$(realpath $1)
+  local CMD=$( cd "$(dirname "$1")" ; pwd -P )
   echo "Building: $CMD for $GOOS-$GOARCH"
 
   (cd "$TARGET_PATH" && go build $ARGS -ldflags "${LDFLAGS}${LDFLAGS2}" -gcflags "$GCFLAGS" "$CMD")
