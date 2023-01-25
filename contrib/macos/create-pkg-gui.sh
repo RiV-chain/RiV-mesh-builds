@@ -18,7 +18,7 @@ command -v mkbom >/dev/null 2>&1 || (
 
 # Build RiV-mesh
 echo "running GO111MODULE=on GOOS=darwin GOARCH=${PKGARCH-amd64} ./build"
-GO111MODULE=on GOOS=darwin GOARCH=${PKGARCH-amd64} ./build
+(cd RiV-mesh && GO111MODULE=on GOOS=darwin GOARCH=${PKGARCH-amd64} ./build)
 
 # Check if we can find the files we need - they should
 # exist if you are running this script from the root of
