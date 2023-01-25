@@ -15,11 +15,36 @@ command -v mkbom >/dev/null 2>&1 || (
   sudo make install || (echo "Failed to build mkbom"; exit 1)
 )
 
+buildbin() {
+  #to use realpath install coreutils: $brew install coreutils
+  local CMD=$(realpath $1)
+  echo "Building: $CMD for $GOOS-$GOARCH"
+
+  (cd "$TARGET_PATH" && go build $ARGS -ldflags "${LDFLAGS}${LDFLAGS2}" -gcflags "$GCFLAGS" "$CMD")
+
+  if [ $UPX ]; then
+    upx --brute "$CMD"
+  fi
+}
+
+GOOS=darwin
+if [ $PKGARCH = "amd64" ]; then
+  GOARCH=amd64
+elif [ $PKGARCH = "arm64" ]; then
+  GOARCH=arm64
+else
+  echo "Specify PKGARCH=amd64 or arm64"
+  exit 1
+fi
+
+# Build RiV-mesh
+(cd RiV-mesh && ./build)
+
 # Check if we can find the files we need - they should
 # exist if you are running this script from the root of
 # the RiV-mesh repo and you have ran ./build
-test -f mesh || (echo "mesh binary not found"; exit 1)
-test -f meshctl || (echo "meshctl binary not found"; exit 1)
+test -f RiV-mesh/mesh || (echo "mesh binary not found"; exit 1)
+test -f RiV-mesh/meshctl || (echo "meshctl binary not found"; exit 1)
 test -f contrib/macos/mesh.plist || (echo "contrib/macos/mesh.plist not found"; exit 1)
 test -f contrib/semver/version.sh || (echo "contrib/semver/version.sh not found"; exit 1)
 
@@ -35,8 +60,8 @@ mkdir -p pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS
 mkdir -p pkgbuild/root/Library/LaunchDaemons
 
 # Copy package contents into the pkgbuild root
-cp mesh pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS
-cp meshctl pkgbuild/root/usr/local/bin
+cp RiV-mesh/mesh pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS
+cp RiV-mesh/meshctl pkgbuild/root/usr/local/bin
 cp contrib/macos/mesh.plist pkgbuild/root/Library/LaunchDaemons
 
 # Create the postinstall script
@@ -74,8 +99,8 @@ chmod 755 pkgbuild/root/usr/local/bin/meshctl
 ( cd pkgbuild/root && find . | cpio -o --format odc --owner 0:80 | gzip -c ) > pkgbuild/flat/base.pkg/Payload
 
 # Work out metadata for the package info
-PKGNAME=$(sh contrib/semver/name.sh)
-PKGVERSION=$(sh contrib/semver/version.sh --bare)
+PKGNAME=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
+PKGVERSION=$(sh -c 'RiV-mesh && contrib/semver/version.sh --bare')
 PKGARCH=${PKGARCH-amd64}
 PAYLOADSIZE=$(( $(wc -c pkgbuild/flat/base.pkg/Payload | awk '{ print $1 }') / 1024 ))
 
