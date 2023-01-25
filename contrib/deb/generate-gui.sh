@@ -43,7 +43,7 @@ if [ $PKGARCH = "amd64" ]; then
 elif [ $PKGARCH = "i386" ]; then
   GOARCH=386
 else
-  echo "Specify PKGARCH=amd64,i386,mips,mipsel,armhf,arm64,armel"
+  echo "Specify PKGARCH=amd64 or i386"
   exit 1
 fi
 
