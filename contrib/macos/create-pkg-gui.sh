@@ -72,7 +72,7 @@ mkdir -p pkgbuild/root/Library/LaunchDaemons
 cp RiV-mesh/meshctl pkgbuild/root/usr/local/bin
 cp RiV-mesh/mesh pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS
 cp mesh-ui pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS
-cp riv.icns pkgbuild/root/Applications/RiV-mesh.app/Contents/Resources
+cp RiV-mesh/riv.icns pkgbuild/root/Applications/RiV-mesh.app/Contents/Resources
 cp -r contrib/ui/mesh-ui/ui pkgbuild/root/Applications/RiV-mesh.app/Contents/Resources
 cp contrib/macos/mesh.plist pkgbuild/root/Library/LaunchDaemons
 
