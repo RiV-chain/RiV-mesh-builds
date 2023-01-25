@@ -16,9 +16,24 @@ command -v mkbom >/dev/null 2>&1 || (
   sudo make install || (echo "Failed to build mkbom"; exit 1)
 )
 
+buildbin() {
+  local CMD=$(realpath $1)
+  echo "Building: $CMD for $GOOS-$GOARCH"
+
+  (cd "$TARGET_PATH" && go build $ARGS -ldflags "${LDFLAGS}${LDFLAGS2}" -gcflags "$GCFLAGS" "$CMD")
+
+  if [ $UPX ]; then
+    upx --brute "$CMD"
+  fi
+}
+
+build_mesh_ui() {
+  buildbin ./contrib/ui/mesh-ui
+}
+
 # Build RiV-mesh
-echo "running GO111MODULE=on GOOS=darwin GOARCH=${PKGARCH-amd64} ./build"
-(cd RiV-mesh && GO111MODULE=on GOOS=darwin GOARCH=${PKGARCH-amd64} ./build)
+(cd RiV-mesh && GO111MODULE=on GOOS=darwin GOARCH=${PKGARCH} ./build)
+build_mesh_ui
 
 # Check if we can find the files we need - they should
 # exist if you are running this script from the root of
@@ -43,8 +58,8 @@ mkdir -p pkgbuild/root/usr/local/bin
 mkdir -p pkgbuild/root/Library/LaunchDaemons
 
 # Copy package contents into the pkgbuild root
-cp meshctl pkgbuild/root/usr/local/bin
-cp mesh pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS
+cp RiV-mesh/meshctl pkgbuild/root/usr/local/bin
+cp RiV-mesh/mesh pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS
 cp mesh-ui pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS
 cp riv.icns pkgbuild/root/Applications/RiV-mesh.app/Contents/Resources
 cp -r contrib/ui/mesh-ui/ui pkgbuild/root/Applications/RiV-mesh.app/Contents/Resources
@@ -92,7 +107,6 @@ chmod 755 pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS/open-mesh-ui
 # Work out metadata for the package info
 PKGNAME=$(sh contrib/semver/name.sh)
 PKGVERSION=$(sh contrib/semver/version.sh --bare)
-PKGARCH=${PKGARCH-amd64}
 
 # Create the Info.plist file
 cat > pkgbuild/root/Applications/RiV-mesh.app/Contents/Info.plist << EOF
