@@ -22,12 +22,43 @@ if [ $PKGBRANCH = "master" ]; then
   PKGREPLACES=mesh-develop
 fi
 
-if [ $PKGARCH = "amd64" ]; then (cd RiV-mesh && GOARCH=amd64 GOOS=linux ./build)
-elif [ $PKGARCH = "i386" ]; then (cd RiV-mesh && GOARCH=386 GOOS=linux ./build)
+#could be static
+buildbin() {
+  local CMD=$(realpath $1)
+  echo "Building: $CMD for $GOOS-$GOARCH"
+
+  (cd "$TARGET_PATH" && go build $ARGS -ldflags "${LDFLAGS}${LDFLAGS2}" -gcflags "$GCFLAGS" "$CMD")
+
+  if [ $UPX ]; then
+    upx --brute "$CMD"
+  fi
+}
+
+build_mesh() {
+  LDFLAGS2="${STATIC}" buildbin RiV-mesh/cmd/mesh
+}
+
+build_meshctl() {
+  LDFLAGS2="${STATIC}" buildbin RiV-mesh/cmd/meshctl
+}
+
+build_mesh_ui() {
+  buildbin ./contrib/ui/mesh-ui
+}
+
+GOOS=linux
+if [ $PKGARCH = "amd64" ]; then
+  GOARCH=amd64
+elif [ $PKGARCH = "i386" ]; then
+  GOARCH=386
 else
   echo "Specify PKGARCH=amd64,i386,mips,mipsel,armhf,arm64,armel"
   exit 1
 fi
+
+build_mesh
+build_meshctl
+build_mesh_ui
 
 echo "Building $PKGFILE"
 
