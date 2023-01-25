@@ -31,7 +31,7 @@ $ bash -lc "./contrib/msi/build-msi-ie.sh x86"
 ### Debian:
 #### Install dependencies:
 ```
-sudo apt-get install pkg-config rpm imagemagick gtk+-3.0 webkit2gtk-4.0
+$ sudo apt-get install pkg-config rpm imagemagick gtk+-3.0 webkit2gtk-4.0
 ```
 #### Build:
 ```
