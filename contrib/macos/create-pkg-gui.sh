@@ -17,7 +17,8 @@ command -v mkbom >/dev/null 2>&1 || (
 )
 
 buildbin() {
-  local CMD=$( cd "$(dirname "$1")" ; pwd -P )
+  #to use realpath install coreutils: $brew install coreutils
+  local CMD=$(realpath $1)
   echo "Building: $CMD for $GOOS-$GOARCH"
 
   (cd "$TARGET_PATH" && go build $ARGS -ldflags "${LDFLAGS}${LDFLAGS2}" -gcflags "$GCFLAGS" "$CMD")
