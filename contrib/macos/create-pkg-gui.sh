@@ -17,7 +17,7 @@ command -v mkbom >/dev/null 2>&1 || (
 )
 
 buildbin() {
-  local CMD=$( cd "$(dirname "$2")" ; pwd -P )
+  local CMD=$( cd "$(dirname "$1")" ; pwd -P )
   echo "Building: $CMD for $GOOS-$GOARCH"
 
   (cd "$TARGET_PATH" && go build $ARGS -ldflags "${LDFLAGS}${LDFLAGS2}" -gcflags "$GCFLAGS" "$CMD")
