@@ -15,7 +15,7 @@ $ swag init -g RiV-mesh/src/restapi/rest_server.go --ot yaml -o contrib/ui/mesh-
 Downalod and install **git-scm**, **7zip**, **signtools**(optional) and point these binaries in system PATH.
 #### Install go-winres
 ```
-go install github.com/tc-hib/go-winres@latest
+$ go install github.com/tc-hib/go-winres@latest
 ```
 
 #### Build:
