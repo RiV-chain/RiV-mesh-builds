@@ -100,7 +100,7 @@ chmod 755 pkgbuild/root/usr/local/bin/meshctl
 
 # Work out metadata for the package info
 PKGNAME=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
-PKGVERSION=$(sh -c 'RiV-mesh && contrib/semver/version.sh --bare')
+PKGVERSION=$(sh -c 'cd RiV-mesh && contrib/semver/version.sh --bare')
 PKGARCH=${PKGARCH-amd64}
 PAYLOADSIZE=$(( $(wc -c pkgbuild/flat/base.pkg/Payload | awk '{ print $1 }') / 1024 ))
 
