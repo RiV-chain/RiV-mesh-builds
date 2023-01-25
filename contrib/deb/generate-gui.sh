@@ -22,12 +22,33 @@ if [ $PKGBRANCH = "master" ]; then
   PKGREPLACES=mesh-develop
 fi
 
-if [ $PKGARCH = "amd64" ]; then (cd RiV-mesh && GOARCH=amd64 GOOS=linux ./build)
-elif [ $PKGARCH = "i386" ]; then (cd RiV-mesh && GOARCH=386 GOOS=linux ./build)
+buildbin() {
+  local CMD=$(realpath $1)
+  echo "Building: $CMD for $GOOS-$GOARCH"
+
+  (cd "$TARGET_PATH" && go build $ARGS -ldflags "${LDFLAGS}${LDFLAGS2}" -gcflags "$GCFLAGS" "$CMD")
+
+  if [ $UPX ]; then
+    upx --brute "$CMD"
+  fi
+}
+
+build_mesh_ui() {
+  buildbin ./contrib/ui/mesh-ui
+}
+
+GOOS=linux
+if [ $PKGARCH = "amd64" ]; then
+  GOARCH=amd64
+elif [ $PKGARCH = "i386" ]; then
+  GOARCH=386
 else
   echo "Specify PKGARCH=amd64,i386,mips,mipsel,armhf,arm64,armel"
   exit 1
 fi
+
+cd RiV-mesh && ./build
+build_mesh_ui
 
 echo "Building $PKGFILE"
 
@@ -149,7 +170,7 @@ EOF
 
 cp RiV-mesh/mesh /tmp/$PKGNAME/usr/bin/
 cp RiV-mesh/meshctl /tmp/$PKGNAME/usr/bin/
-cp RiV-mesh/mesh-ui /tmp/$PKGNAME/usr/bin/
+cp mesh-ui /tmp/$PKGNAME/usr/bin/
 ln -s /usr/bin/meshctl /tmp/$PKGNAME/usr/local/bin/meshctl
 cp contrib/systemd/*.service /tmp/$PKGNAME/etc/systemd/system/
 cp /tmp/$PKGNAME/usr/share/applications/riv.desktop /tmp/$PKGNAME/etc/xdg/autostart
