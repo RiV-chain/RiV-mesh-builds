@@ -22,17 +22,28 @@ if [ $PKGBRANCH = "master" ]; then
   PKGREPLACES=mesh-develop
 fi
 
-if [ $PKGARCH = "amd64" ]; then (cd RiV-mesh && GOARCH=amd64 GOOS=linux ./build)
-elif [ $PKGARCH = "i386" ]; then (cd RiV-mesh && GOARCH=386 GOOS=linux ./build)
-elif [ $PKGARCH = "mipsel" ]; then (cd RiV-mesh && GOARCH=mipsle GOOS=linux ./build)
-elif [ $PKGARCH = "mips" ]; then (cd RiV-mesh && GOARCH=mips64 GOOS=linux ./build)
-elif [ $PKGARCH = "armhf" ]; then (cd RiV-mesh && GOARCH=arm GOOS=linux GOARM=6 ./build)
-elif [ $PKGARCH = "arm64" ]; then (cd RiV-mesh && GOARCH=arm64 GOOS=linux ./build)
-elif [ $PKGARCH = "armel" ]; then (cd RiV-mesh && GOARCH=arm GOOS=linux GOARM=5 ./build)
+GOOS=linux
+if [ $PKGARCH = "amd64" ]; then
+  GOARCH=amd64
+elif [ $PKGARCH = "i386" ]; then
+  GOARCH=386
+elif [ $PKGARCH = "mipsel" ]; then
+  GOARCH=mipsle
+elif [ $PKGARCH = "mips" ]; then
+  GOARCH=mips64
+elif [ $PKGARCH = "armhf" ]; then
+  GOARCH=arm
+elif [ $PKGARCH = "arm64" ]; then
+  GOARCH=arm64
+elif [ $PKGARCH = "armel" ]; then
+  GOARCH=arm
+  GOARM=5
 else
   echo "Specify PKGARCH=amd64,i386,mips,mipsel,armhf,arm64,armel"
   exit 1
 fi
+
+(cd RiV-mesh && ./build)
 
 echo "Building $PKGFILE"
 
