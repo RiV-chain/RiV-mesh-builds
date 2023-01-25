@@ -31,8 +31,18 @@ build_mesh_ui() {
   buildbin ./contrib/ui/mesh-ui
 }
 
+GOOS=darwin
+if [ $PKGARCH = "amd64" ]; then
+  GOARCH=amd64
+elif [ $PKGARCH = "arm64" ]; then
+  GOARCH=arm64
+else
+  echo "Specify PKGARCH=amd64 or arm64"
+  exit 1
+fi
+
 # Build RiV-mesh
-(cd RiV-mesh && GO111MODULE=on GOOS=darwin GOARCH=${PKGARCH} ./build)
+(cd RiV-mesh && ./build)
 build_mesh_ui
 
 # Check if we can find the files we need - they should
