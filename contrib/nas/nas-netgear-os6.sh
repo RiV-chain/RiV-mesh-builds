@@ -22,12 +22,18 @@ if [ $PKGBRANCH = "master" ]; then
   PKGREPLACES=mesh-develop
 fi
 
-if [ $PKGARCH = "amd64" ]; then GOARCH=amd64 GOOS=linux ./build
-elif [ $PKGARCH = "armel" ]; then GOARCH=arm GOARM=5 GOOS=linux ./build
+GOOS=linux
+if [ $PKGARCH = "amd64" ]; then
+  GOARCH=amd64
+elif [ $PKGARCH = "armel" ]; then
+  GOARCH=arm
+  GOARM=5
 else
   echo "Specify PKGARCH=amd64,armel"
   exit 1
 fi
+
+(cd RiV-mesh && ./build)
 
 echo "Building $PKGFILE"
 
@@ -97,8 +103,8 @@ cat > /tmp/$PKGNAME/debian/docs << EOF
 Please see https://github.com/RiV-chain/RiV-mesh/
 EOF
 
-cp mesh /tmp/$PKGNAME/apps/mesh/bin
-cp meshctl /tmp/$PKGNAME/apps/mesh/bin
+cp RiV-mesh/mesh /tmp/$PKGNAME/apps/mesh/bin
+cp RiV-mesh/meshctl /tmp/$PKGNAME/apps/mesh/bin
 ln -s /apps/mesh/bin/meshctl /tmp/$PKGNAME/usr/bin/meshctl
 ln -s /apps/mesh/var/log/mesh.log /tmp/$PKGNAME/apps/mesh/www/log
 chmod 0775 /tmp/$PKGNAME/DEBIAN/*
