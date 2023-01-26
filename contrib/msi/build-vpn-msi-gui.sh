@@ -406,6 +406,7 @@ case $TARGET in
     prepare_metadata
     copy_res
     build_mesh
+    build_vpn
     build_mesh_ui
     sign_exe
     prepare_msi_build
