@@ -10,9 +10,9 @@ then
   exit 1
 fi
 
-PKGBRANCH=$(basename `git name-rev --name-only HEAD`)
-PKG=$(sh contrib/semver/name.sh)
-PKGVERSION=$(sh contrib/semver/version.sh --bare)
+PKGBRANCH=$(sh -c 'cd RiV-mesh && basename `git name-rev --name-only HEAD`')
+PKG=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
+PKGVERSION=$(sh -c 'cd RiV-mesh && contrib/semver/version.sh --bare')
 PKGARCH=${PKGARCH-amd64}
 PKGNAME=$PKG-$PKGVERSION-$PKGARCH
 PKGFOLDER=mesh
@@ -22,11 +22,16 @@ if [ $PKGBRANCH = "master" ]; then
   PKGREPLACES=mesh-develop
 fi
 
-if [ $PKGARCH = "arm" ]; then GOOS=linux GOARCH=arm GOARM=5 ./build
+GOOS=linux
+if [ $PKGARCH = "arm" ]; then
+  GOARCH=arm
+  GOARM=5
 else
   echo "Specify PKGARCH=arm"
   exit 1
 fi
+
+(cd RiV-mesh && ./build)
 
 echo "Building $PKGNAME"
 
@@ -45,7 +50,7 @@ cp -r -n contrib/ui/mesh-ui/ui/* /tmp/$PKGFOLDER/www/
 
 for resolution in 256x256; do
   echo "Converting icon for: $resolution"
-  convert -colorspace sRGB ./riv.png -resize $resolution PNG32:/tmp/$PKGFOLDER/www/mesh.png  && \
+  convert -colorspace sRGB logos/riv.png -resize $resolution PNG32:/tmp/$PKGFOLDER/www/mesh.png  && \
   chmod 644 /tmp/$PKGFOLDER/www/mesh.png
 done
 
@@ -75,8 +80,8 @@ MaxFWVer:
 IndividualFlag:
 EOF
 
-cp mesh /tmp/$PKGFOLDER/bin
-cp meshctl /tmp/$PKGFOLDER/bin
+cp RiV-mesh/mesh /tmp/$PKGFOLDER/bin
+cp RiV-mesh/meshctl /tmp/$PKGFOLDER/bin
 chmod -R 0755 /tmp/$PKGFOLDER/www/assets
 chmod -R u+rwX,go+rX,g-w /tmp/$PKGFOLDER
 chmod +x /tmp/$PKGFOLDER/*.sh
