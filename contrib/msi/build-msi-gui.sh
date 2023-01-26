@@ -98,11 +98,11 @@ prepare_metadata() {
 }
 
 copy_res(){
-  go-winres simply --icon RiV-mesh/riv.ico --file-version $PKGVERSION --file-description "RiV-mesh (c) GUI, 2023 RIV CHAIN" \
+  go-winres simply --icon logos/riv.ico --file-version $PKGVERSION --file-description "RiV-mesh (c) GUI, 2023 RIV CHAIN" \
   --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2023, RIV CHAIN" --manifest gui
   cp *.syso contrib/ui/mesh-ui
   #Build winres
-  go-winres simply --icon RiV-mesh/riv.ico --file-version $PKGVERSION --file-description "RiV-mesh (c) service, 2023 RIV CHAIN" \
+  go-winres simply --icon logos/riv.ico --file-version $PKGVERSION --file-description "RiV-mesh (c) service, 2023 RIV CHAIN" \
   --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2023, RIV CHAIN"
   cp *.syso RiV-mesh/cmd/mesh
   go-winres simply --file-version $PKGVERSION --file-description "RiV-mesh (c) CLI, 2023 RIV CHAIN" \
@@ -158,10 +158,10 @@ cat > updateconfig.bat << EOF
   )
 EOF
 
-  cp RiV-mesh/riv.ico "$PKGUIFOLDER"/favicon.ico
+  cp logos/riv.ico "$PKGUIFOLDER"/favicon.ico
 
   #fix me: move icons here from RiV-mesh repo
-  cp RiV-mesh/riv.ico .
+  cp logos/riv.ico .
   #copy exe to current folder
   cp RiV-mesh/mesh* .
 
