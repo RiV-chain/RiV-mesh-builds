@@ -59,14 +59,14 @@ cp -r -n contrib/ui/mesh-ui/ui/* /tmp/$PKGFOLDER/www/
 for res in 16 24 32 48 64 72 256; do
   resolution="${res}x${res}"
   echo "Converting icon for: $resolution"
-  convert -colorspace sRGB RiV-mesh/riv.png -resize $resolution PNG32:/tmp/$PKGFOLDER/ui/mesh-$res.png  && \
+  convert -colorspace sRGB logos/riv.png -resize $resolution PNG32:/tmp/$PKGFOLDER/ui/mesh-$res.png  && \
   chmod 644 /tmp/$PKGFOLDER/ui/mesh-$res.png
 done
 
 echo "Converting icon for: 64x64"
-convert -colorspace sRGB RiV-mesh/riv.png -resize 64x64 PNG32:/tmp/$PKGNAME/PACKAGE_ICON.PNG
+convert -colorspace sRGB logos/riv.png -resize 64x64 PNG32:/tmp/$PKGNAME/PACKAGE_ICON.PNG
 echo "Converting icon for: 256x256"
-convert -colorspace sRGB RiV-mesh/riv.png -resize 256x256 PNG32:/tmp/$PKGNAME/PACKAGE_ICON_256.PNG
+convert -colorspace sRGB logos/riv.png -resize 256x256 PNG32:/tmp/$PKGNAME/PACKAGE_ICON_256.PNG
 
 cat > /tmp/$PKGNAME/INFO << EOF
 package="mesh"
