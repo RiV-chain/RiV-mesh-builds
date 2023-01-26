@@ -10,9 +10,9 @@ then
   exit 1
 fi
 
-PKGBRANCH=$(basename `git name-rev --name-only HEAD`)
-PKG=$(sh contrib/semmsiver/name.sh)
-PKGVERSION=$(sh contrib/msi/msversion.sh --bare)
+PKGBRANCH=$(sh -c 'cd RiV-mesh && basename `git name-rev --name-only HEAD`')
+PKG=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
+PKGVERSION=$(sh -c 'cd RiV-mesh && contrib/semver/version.sh --bare')
 PKGARCH=${PKGARCH-amd64}
 PKGFOLDER=$ENV_TAG-$PKGARCH-$PKGVERSION
 PKGFILE=mesh-$PKGFOLDER.qpkg
@@ -22,17 +22,31 @@ if [ $PKGBRANCH = "master" ]; then
   PKGREPLACES=mesh-develop
 fi
 
-if [ $PKGARCH = "x86_64" ]; then GOOS=linux GOARCH=amd64 ./build
-elif [ $PKGARCH = "arm-x31" ]; then GOOS=linux GOARCH=arm GOARM=7 ./build
-elif [ $PKGARCH = "arm-x41" ]; then GOOS=linux GOARCH=arm GOARM=7 ./build
-elif [ $PKGARCH = "x86" ]; then GOOS=linux GOARCH=386 ./build
-elif [ $PKGARCH = "arm_64" ]; then GOOS=linux GOARCH=arm64 ./build
-elif [ $PKGARCH = "arm-x09" ]; then GOOS=linux GOARCH=arm GOARM=5 ./build
-elif [ $PKGARCH = "arm-x19" ]; then GOOS=linux GOARCH=arm GOARM=5 ./build
+GOOS=linux
+if [ $PKGARCH = "x86_64" ]; then
+  GOARCH=amd64
+elif [ $PKGARCH = "arm-x31" ]; then
+  GOARCH=arm
+  GOARM=7
+elif [ $PKGARCH = "arm-x41" ]; then
+  GOARCH=arm
+  GOARM=7
+elif [ $PKGARCH = "x86" ]; then
+  GOARCH=386
+elif [ $PKGARCH = "arm_64" ]; then
+  GOARCH=arm64
+elif [ $PKGARCH = "arm-x09" ]; then
+  GOARCH=arm
+  GOARM=5
+elif [ $PKGARCH = "arm-x19" ]; then
+  GOARCH=arm
+  GOARM=5
 else
   echo "Specify PKGARCH=x86_64, x86, arm_64, arm-x09, arm-x19, arm-x31 or arm-x41"
   exit 1
 fi
+
+(cd RiV-mesh && ./build)
 
 echo "Building $PKGFOLDER"
 
@@ -75,8 +89,8 @@ EOF
 
 touch /tmp/$PKGFOLDER/mesh/qdk.conf
 
-cp mesh /tmp/$PKGFOLDER/mesh/shared/bin
-cp meshctl /tmp/$PKGFOLDER/mesh/shared/bin
+cp RiV-mesh/mesh /tmp/$PKGFOLDER/mesh/shared/bin
+cp RiV-mesh/meshctl /tmp/$PKGFOLDER/mesh/shared/bin
 chmod +x /tmp/$PKGFOLDER/mesh/shared/bin/*
 chmod 0775 /tmp/$PKGFOLDER/mesh/shared/www -R
 chmod -R u+rwX,go+rX,g-w /tmp/$PKGFOLDER
