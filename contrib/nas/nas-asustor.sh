@@ -10,9 +10,9 @@ then
   exit 1
 fi
 
-PKGBRANCH=$(basename `git name-rev --name-only HEAD`)
-PKG=$(sh contrib/semver/name.sh)
-PKGVERSION=$(sh contrib/semver/version.sh --bare)
+PKGBRANCH=$(sh -c 'cd RiV-mesh && basename `git name-rev --name-only HEAD`')
+PKG=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
+PKGVERSION=$(sh -c 'cd RiV-mesh && contrib/semver/version.sh --bare')
 PKGARCH=${PKGARCH-amd64}
 PKGFOLDER=$ENV_TAG-$PKGARCH-$PKGVERSION
 PKGFILE=mesh-$PKGFOLDER.apk
@@ -22,14 +22,22 @@ if [ $PKGBRANCH = "master" ]; then
   PKGREPLACES=mesh-develop
 fi
 
-if [ $PKGARCH = "x86-64" ]; then GOOS=linux GOARCH=amd64 ./build
-elif [ $PKGARCH = "arm" ]; then GOOS=linux GOARCH=arm GOARM=7 ./build
-elif [ $PKGARCH = "arm64" ]; then GOOS=linux GOARCH=arm64 ./build
-elif [ $PKGARCH = "i386" ]; then GOOS=linux GOARCH=386 ./build
+GOOS=linux
+if [ $PKGARCH = "x86-64" ]; then
+  GOARCH=amd64
+elif [ $PKGARCH = "arm" ]; then
+  GOARCH=arm
+  GOARM=7
+elif [ $PKGARCH = "arm64" ]; then
+  GOARCH=arm64
+elif [ $PKGARCH = "i386" ]; then
+  GOARCH=386
 else
   echo "Specify PKGARCH=x86-64, arm, arm64 or i386"
   exit 1
 fi
+
+(cd RiV-mesh && ./build)
 
 echo "Building $PKGFOLDER"
 
@@ -98,8 +106,8 @@ cat > /tmp/$PKGFOLDER/CONTROL/changelog.txt << EOF
 See https://github.com/RiV-chain/RiV-mesh
 EOF
 
-cp mesh /tmp/$PKGFOLDER/bin
-cp meshctl /tmp/$PKGFOLDER/bin
+cp RiV-mesh/mesh /tmp/$PKGFOLDER/bin
+cp RiV-mesh/meshctl /tmp/$PKGFOLDER/bin
 cp LICENSE /tmp/$PKGFOLDER/CONTROL/license.txt
 chmod +x /tmp/$PKGFOLDER/bin/*
 chmod 0775 /tmp/$PKGFOLDER/www -R
