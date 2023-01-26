@@ -10,9 +10,9 @@ then
   exit 1
 fi
 
-PKGBRANCH=$(basename `git name-rev --name-only HEAD`)
-PKG=$(sh contrib/semver/name.sh)
-PKGVERSION=$(sh contrib/semver/version.sh --bare)
+PKGBRANCH=$(sh -c 'cd RiV-mesh && basename `git name-rev --name-only HEAD`')
+PKG=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
+PKGVERSION=$(sh -c 'cd RiV-mesh && contrib/semver/version.sh --bare')
 PKGARCH=${PKGARCH-amd64}
 PKGNAME=$ENV_TAG-$PKGVERSION
 PKGFILE=$PKGNAME.deb
