@@ -10,9 +10,9 @@ then
   exit 1
 fi
 
-PKGBRANCH=$(basename `git name-rev --name-only HEAD`)
-PKG=$(sh contrib/semver/name.sh)
-PKGVERSION=$(sh contrib/nas/tool/synology_version.sh --bare)
+PKGBRANCH=$(sh -c 'cd RiV-mesh && basename `git name-rev --name-only HEAD`')
+PKG=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
+PKGVERSION=$(sh -c 'cd RiV-mesh && contrib/semver/version.sh --bare')
 PKGARCH=${PKGARCH-amd64}
 PKGNAME=$ENV_TAG-$PKGARCH-$PKGVERSION
 PKGFOLDER=${PKGNAME}/package
@@ -22,13 +22,20 @@ if [ $PKGBRANCH = "master" ]; then
   PKGREPLACES=mesh-develop
 fi
 
-if [ $PKGARCH = "x86_64" ]; then GOOS=linux GOARCH=amd64 ./build
-elif [ $PKGARCH = "armv7" ]; then GOOS=linux GOARCH=arm GOARM=7 ./build
-elif [ $PKGARCH = "arm64" ]; then GOOS=linux GOARCH=arm64 ./build
+GOOS=linux
+if [ $PKGARCH = "x86_64" ]; then
+  GOARCH=amd64
+elif [ $PKGARCH = "armv7" ]; then
+  GOARCH=arm
+  GOARM=7
+elif [ $PKGARCH = "arm64" ]; then
+  GOARCH=arm64
 else
   echo "Specify PKGARCH=x86_64, armv7 or arm64"
   exit 1
 fi
+
+(cd RiV-mesh && ./build)
 
 echo "Building $PKGNAME"
 
@@ -79,8 +86,8 @@ EOF
 
 echo $PKGVERSION > /tmp/$PKGNAME/VERSION
 
-cp mesh /tmp/$PKGFOLDER/bin
-cp meshctl /tmp/$PKGFOLDER/bin
+cp RiV-mesh/mesh /tmp/$PKGFOLDER/bin
+cp RiV-mesh/meshctl /tmp/$PKGFOLDER/bin
 cp LICENSE /tmp/$PKGNAME/
 
 chmod -R 0755 /tmp/$PKGFOLDER/www/assets
