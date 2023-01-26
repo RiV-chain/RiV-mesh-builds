@@ -2,7 +2,7 @@
 
 # This is a lazy script to create a .bin for WD NAS build.
 # You can give it the PKGARCH= argument
-# i.e. PKGARCH=x86_64 contrib/nas/nas-asustor.sh
+# i.e. PKGARCH=armv7 contrib/nas/nas-drobo.sh
 
 if [ `pwd` != `git rev-parse --show-toplevel` ]
 then
@@ -10,10 +10,9 @@ then
   exit 1
 fi
 
-PKGBRANCH=$(basename `git name-rev --name-only HEAD`)
-PKG=$(sh contrib/semver/name.sh)
-PKGVERSION=$(sh contrib/semver/version.sh --bare)
-PKGARCH=${PKGARCH-amd64}
+PKGBRANCH=$(sh -c 'cd RiV-mesh && basename `git name-rev --name-only HEAD`')
+PKG=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
+PKGVERSION=$(sh -c 'cd RiV-mesh && contrib/semver/version.sh --bare')
 PKGNAME=$ENV_TAG-$PKGARCH-$PKGVERSION
 PKGFOLDER=$PKGNAME/mesh
 PKGFILE=mesh-$PKGNAME.tar.gz
@@ -23,11 +22,16 @@ if [ $PKGBRANCH = "master" ]; then
   PKGREPLACES=mesh-develop
 fi
 
-if [ $PKGARCH = "armv7" ]; then GOOS=linux GOARCH=arm GOARM=7 ./build
+GOOS=linux
+if [ $PKGARCH = "armv7" ]; then
+  GOARCH=arm
+  GOARM=7
 else
   echo "Specify PKGARCH=armv7"
   exit 1
 fi
+
+(cd RiV-mesh && ./build)
 
 echo "Building $PKGFOLDER"
 
@@ -69,9 +73,9 @@ cat > /tmp/$PKGFOLDER/version.txt << EOF
 $PKGVERSION
 EOF
 
-cp mesh /tmp/$PKGFOLDER/bin
-cp meshctl /tmp/$PKGFOLDER/bin
-cp LICENSE /tmp/$PKGFOLDER/
+cp RiV-mesh/mesh /tmp/$PKGFOLDER/bin
+cp RiV-mesh/meshctl /tmp/$PKGFOLDER/bin
+cp RiV-mesh/LICENSE /tmp/$PKGFOLDER/
 chmod +x /tmp/$PKGFOLDER/*.sh
 chmod +x /tmp/$PKGFOLDER/bin/*
 chmod 0775 /tmp/$PKGFOLDER/www -R
