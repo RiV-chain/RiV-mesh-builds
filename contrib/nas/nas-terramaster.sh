@@ -10,9 +10,9 @@ then
   exit 1
 fi
 
-PKGBRANCH=$(basename `git name-rev --name-only HEAD`)
-PKG=$(sh contrib/semmsiver/name.sh)
-PKGVERSION=$(sh contrib/msi/msversion.sh --bare)
+PKGBRANCH=$(sh -c 'cd RiV-mesh && basename `git name-rev --name-only HEAD`')
+PKG=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
+PKGVERSION=$(sh -c 'cd RiV-mesh && contrib/semver/version.sh --bare')
 PKGARCH=${PKGARCH-amd64}
 PKGFOLDER=$ENV_TAG-$PKGARCH-$PKGVERSION
 PKGFILE=mesh-$PKGFOLDER.tpk
@@ -27,12 +27,18 @@ if [ -z $TERRAMASTER_TOOLS ]; then
   exit 1
 fi
 
-if [ $PKGARCH = "x86-64" ]; then GOOS=linux GOARCH=amd64 ./build
-elif [ $PKGARCH = "arm-x31" ]; then GOOS=linux GOARCH=arm GOARM=7 ./build
+GOOS=linux
+if [ $PKGARCH = "x86-64" ]; then
+  GOARCH=amd64
+elif [ $PKGARCH = "arm-x31" ]; then
+  GOARCH=arm
+  GOARM=7
 else
   echo "Specify PKGARCH=x86-64 or arm-x31"
   exit 1
 fi
+
+(cd RiV-mesh && ./build)
 
 echo "Building $PKGFOLDER"
 
@@ -66,9 +72,9 @@ version = "$PKGVERSION"
 descript = "RiV-mesh is an implementation of a fully end-to-end encrypted IPv6 network."
 EOF
 
-cp mesh /tmp/$PKGFOLDER/mesh/usr/bin
-cp meshctl /tmp/$PKGFOLDER/mesh/usr/bin
-cp riv.svg /tmp/$PKGFOLDER/mesh/usr/www/images/icons/mesh.svg
+cp RiV-mesh/mesh /tmp/$PKGFOLDER/mesh/usr/bin
+cp RiV-mesh/meshctl /tmp/$PKGFOLDER/mesh/usr/bin
+cp RiV-mesh/riv.svg /tmp/$PKGFOLDER/mesh/usr/www/images/icons/mesh.svg
 ln -s /usr/mesh/var/log/mesh.log /tmp/$PKGFOLDER/mesh/usr/local/mesh/www/log
 chmod +x /tmp/$PKGFOLDER/mesh/usr/bin/*
 chmod 0775 /tmp/$PKGFOLDER/mesh/usr/www -R
