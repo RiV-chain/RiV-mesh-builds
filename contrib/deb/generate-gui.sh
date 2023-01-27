@@ -13,7 +13,6 @@ fi
 PKGBRANCH=$(sh -c 'cd RiV-mesh && basename `git name-rev --name-only HEAD`')
 PKG=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
 PKGVERSION=$(sh -c 'cd RiV-mesh && contrib/semver/version.sh --bare')
-PKGARCH=${PKGARCH-amd64}
 PKGNAME=$PKG-$PKGVERSION-$PKGARCH
 PKGFILE=$PKGNAME.deb
 PKGREPLACES=mesh
@@ -23,7 +22,8 @@ if [ $PKGBRANCH = "master" ]; then
 fi
 
 buildbin() {
-  local CMD=$(realpath $1)  echo "Building: $CMD for $GOOS-$GOARCH"
+  local CMD=$(realpath $1)
+  echo "Building: $CMD for $GOOS-$GOARCH"
 
   (cd "$TARGET_PATH" && go build $ARGS -ldflags "${LDFLAGS}${LDFLAGS2}" -gcflags "$GCFLAGS" "$CMD")
 
@@ -46,7 +46,8 @@ else
   exit 1
 fi
 
-(cd RiV-mesh && ./build)
+(cd RiV-mesh && GOOS=$GOOS GOARCH=$GOARCH ./build)
+
 build_mesh_ui
 
 echo "Building $PKGFILE"
