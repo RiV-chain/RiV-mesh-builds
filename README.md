@@ -20,12 +20,12 @@ $ go install github.com/tc-hib/go-winres@latest
 
 #### Build:
 ```
-$ bash -lc "./contrib/msi/build-msi-gui.sh x64"
-$ bash -lc "./contrib/msi/build-msi-gui.sh x86"
-$ bash -lc "./contrib/msi/build-msi.sh x64"
-$ bash -lc "./contrib/msi/build-msi.sh x86"
-$ bash -lc "./contrib/msi/build-msi-ie.sh x64"
-$ bash -lc "./contrib/msi/build-msi-ie.sh x86"
+$ ./contrib/msi/build-msi-gui.sh x64
+$ ./contrib/msi/build-msi-gui.sh x86
+$ ./contrib/msi/build-msi.sh x64
+$ ./contrib/msi/build-msi.sh x86
+$ ./contrib/msi/build-msi-ie.sh x64
+$ ./contrib/msi/build-msi-ie.sh x86
 ```
 
 ### Debian:
