@@ -38,7 +38,7 @@ else
 fi
 
 # Build RiV-mesh
-(cd RiV-mesh && ./build)
+(cd RiV-mesh && GOOS=$GOOS GOARCH=$GOARCH ./build)
 
 # Check if we can find the files we need - they should
 # exist if you are running this script from the root of
