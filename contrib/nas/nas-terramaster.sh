@@ -38,7 +38,7 @@ else
   exit 1
 fi
 
-(cd RiV-mesh && ./build)
+(cd RiV-mesh && GOOS=$GOOS GOARCH=$GOARCH ./build)
 
 echo "Building $PKGFOLDER"
 
