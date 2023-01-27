@@ -43,7 +43,7 @@ else
 fi
 
 # Build RiV-mesh
-(cd RiV-mesh && ./build)
+(cd RiV-mesh && GOOS=$GOOS GOARCH=$GOARCH ./build)
 build_mesh_ui
 
 # Check if we can find the files we need - they should
