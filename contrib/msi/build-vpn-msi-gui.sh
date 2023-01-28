@@ -90,8 +90,8 @@ setup_wix() {
 
 prepare_metadata() {
   # Work out metadata for the package info
-  PKGNAME=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
-  PKGVERSION=$(sh -c 'cd RiV-mesh && contrib/msi/msversion.sh --bare')
+  PKGNAME=$(sh -c 'cd RiVPN && contrib/semver/name.sh')
+  PKGVERSION=$(sh -c 'cd RiVPN && contrib/msi/msversion.sh --bare')
   PKGVERSIONMS=$(echo $PKGVERSION | tr - .)
   PKGUIFOLDER=contrib/ui/mesh-ui/ui/
   PKGLICENSEFILE=RiV-mesh/LICENSE.rtf
@@ -378,8 +378,8 @@ build_msi(){
   # Generate the MSI
   CANDLEFLAGS="-nologo"
   LIGHTFLAGS="-nologo -spdb -sice:ICE71 -sice:ICE61"
-  wixbin/candle $CANDLEFLAGS -out ${PKGNAME}-vpn-${PKGVERSION}-${PKGARCH}.wixobj -arch ${PKGARCH} wix.xml && \
-  wixbin/light $LIGHTFLAGS -ext WixUIExtension -ext WixUtilExtension -out ${PKGNAME}-vpn-${PKGVERSION}-${PKGARCH}.msi ${PKGNAME}-vpn-${PKGVERSION}-${PKGARCH}.wixobj
+  wixbin/candle $CANDLEFLAGS -out ${PKGNAME}-${PKGVERSION}-${PKGARCH}.wixobj -arch ${PKGARCH} wix.xml && \
+  wixbin/light $LIGHTFLAGS -ext WixUIExtension -ext WixUtilExtension -out ${PKGNAME}-${PKGVERSION}-${PKGARCH}.msi ${PKGNAME}-${PKGVERSION}-${PKGARCH}.wixobj
 }
 
 sign_msi() {
