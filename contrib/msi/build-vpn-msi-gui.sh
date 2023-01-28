@@ -104,7 +104,7 @@ copy_res(){
   #Build winres
   go-winres simply --icon logos/riv.ico --file-version $PKGVERSION --file-description "RiV-mesh (c) service, 2023 RIV CHAIN" \
   --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2023, RIV CHAIN"
-  cp *.syso RiV-mesh/cmd/mesh
+  cp *.syso RiVPN/cmd/mesh
   go-winres simply --file-version $PKGVERSION --file-description "RiV-mesh (c) CLI, 2023 RIV CHAIN" \
   --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2023, RIV CHAIN" --manifest cli
   cp *.syso RiV-mesh/cmd/meshctl
