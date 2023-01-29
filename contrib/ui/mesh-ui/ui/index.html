@@ -94,35 +94,34 @@
       </span>
     </div>
     <!-- Tabs -->
-    <div class="tabs is-centered is-medium is-toggle">
+    <div class="tabs is-centered is-small is-toggle">
       <ul>
         <li class="tab is-active">
           <a onclick="openTab(this, 'my_node');">
             <span class="icon">
-              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"
-                focusable="false" width="1em" height="1em"
-                style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
-                preserveAspectRatio="xMidYMid meet" viewBox="0 0 42 42">
-                <path
-                  d="M18.5 35.5l-8 2c-.48.04-1 .52-1 1v1c0 .5.47 1 1 1h20c.43 0 1-.41 1-1v-1c-.02-.52-.55-.98-1-1l-8-2h-4zm19-1c2.59 0 3-.529 3-3v-26c0-2.391-.55-3-3-3h-34c-2.43 0-3 .54-3 3v26c0 2.51.529 3 3 3h34zm-2-27v22h-30v-22h30z"
-                  fill="white"></path>
-              </svg>
+              <i class="fa fa-display"></i>
             </span>
-            <span>My Node</span>
+            <span>Node</span>
+          </a>
+        </li>
+        <li class="tab is-hidden" id="livpn">
+          <a onclick="openTab(this, 'vpn');">
+            <span class="icon">
+                <?xml version="1.0" encoding="iso-8859-1"?>
+                <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                <svg class="vpn" fill="#aaaaaa" height="123px" width="123px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-100 -100 462.013 462.013" xml:space="preserve" stroke="#ffffff">
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                  <g id="SVGRepo_iconCarrier"> <g> <path d="M131.007,89.188c-23.059,0-41.818,18.76-41.818,41.818s18.76,41.818,41.818,41.818c23.06,0,41.819-18.76,41.819-41.818 S154.066,89.188,131.007,89.188z M131.007,142.825c-6.517,0-11.818-5.302-11.818-11.818c0-6.517,5.302-11.818,11.818-11.818 c6.518,0,11.819,5.302,11.819,11.818C142.826,137.523,137.524,142.825,131.007,142.825z"></path> <path d="M236.547,131.007c7.132-11.85,12.947-23.684,17.224-35.188c12.959-34.856,10.574-63.573-6.715-80.862 c-9.782-9.782-23.688-14.953-40.215-14.953c-22.249,0-48.811,9.182-75.835,25.455C103.983,9.186,77.421,0.004,55.173,0.004 c-16.527,0-30.434,5.171-40.216,14.953C-2.332,32.246-4.717,60.962,8.242,95.819c4.277,11.504,10.092,23.338,17.224,35.188 c-7.133,11.85-12.947,23.684-17.224,35.188c-12.959,34.856-10.574,63.573,6.715,80.862c9.782,9.782,23.688,14.953,40.216,14.953 c22.249,0,48.812-9.182,75.836-25.456c27.022,16.271,53.583,25.453,75.832,25.453h0.004c16.523,0,30.431-5.169,40.212-14.952 c17.289-17.289,19.674-46.004,6.715-80.861C249.494,154.69,243.68,142.857,236.547,131.007z M206.842,30.004 c8.518,0,14.91,2.075,19.002,6.166c10.635,10.635,7.52,36.523-8.301,67.222c-8.301-10.699-17.567-21.207-27.64-31.281 c-10.136-10.136-20.645-19.386-31.285-27.644C176.444,35.238,193.244,30.004,206.842,30.004z M200.633,131.006 c-8.847,12.494-19.511,25.25-31.943,37.683c-12.028,12.028-24.838,22.797-37.681,31.901c-12.844-9.105-25.655-19.874-37.684-31.902 c-12.433-12.433-23.096-25.188-31.943-37.682c8.847-12.494,19.51-25.249,31.943-37.682c12.029-12.029,24.84-22.797,37.683-31.902 c12.843,9.104,25.653,19.873,37.682,31.901C181.122,105.757,191.786,118.513,200.633,131.006z M36.17,36.17 c4.092-4.091,10.485-6.166,19.003-6.166c13.597,0,30.397,5.234,48.224,14.463c-10.64,8.259-21.15,17.508-31.286,27.645 c-10.073,10.074-19.339,20.581-27.64,31.28C28.65,72.693,25.535,46.805,36.17,36.17z M55.173,232.01 c-8.518,0-14.911-2.075-19.003-6.166c-10.635-10.635-7.52-36.523,8.302-67.223c8.3,10.699,17.566,21.206,27.64,31.28 c10.137,10.136,20.646,19.386,31.287,27.645C85.571,226.776,68.77,232.01,55.173,232.01z M225.844,225.842 c-4.092,4.092-10.483,6.165-18.999,6.165h-0.002c-13.598,0-30.397-5.233-48.224-14.462c10.64-8.258,21.148-17.507,31.283-27.643 c10.073-10.074,19.34-20.582,27.64-31.281C233.363,189.32,236.478,215.207,225.844,225.842z"></path> </g> </g>
+                </svg>
+            </span>
+            <span>VPN</span>
           </a>
         </li>
         <li class="tab">
           <a onclick="openTab(this, 'keys');">
             <span class="icon">
-              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"
-                focusable="false" width="1em" height="1em"
-                style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
-                preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
-                <g fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                  <path d="M5 15v15h22V15zm4 0C9 9 9 5 16 5s7 4 7 10m-7 5v3"></path>
-                  <circle cx="16" cy="24" r="1"></circle>
-                </g>
-              </svg>
+              <i class="fa fa-key"></i>
             </span>
             <span>Keys</span>
           </a>
@@ -130,24 +129,13 @@
         <li class="tab">
           <a onclick="openTab(this, 'about');">
             <span class="icon">
-              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"
-                focusable="false" width="1em" height="1em"
-                style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
-                preserveAspectRatio="xMidYMid meet" viewBox="0 0 48 48">
-                <path fill="#2196F3" d="M37 40H11l-6 6V12c0-3.3 2.7-6 6-6h26c3.3 0 6 2.7 6 6v22c0 3.3-2.7 6-6 6z">
-                </path>
-                <g fill="#fff">
-                  <path d="M22 20h4v11h-4z"></path>
-                  <circle cx="24" cy="15" r="2"></circle>
-                </g>
-              </svg>
+              <i class="fa fa-life-ring"></i>
             </span>
             <span>About</span>
           </a>
         </li>
       </ul>
     </div>
-
 
     <div class="tab here " id="my_node">
 
@@ -185,6 +173,48 @@
           </div>
         </div>
 
+      </div>
+    </div>
+
+    <div class="tab here is-hidden" id="vpn">
+      <div class="column">
+        <div class="item">
+          <div class="field">
+            <p class="control">
+              <label class="checkbox is-disabled">
+                <input id="vpn_enable" disabled="" type="checkbox"> Enable
+              </label>
+            </p>
+          </div>
+        </div>
+        <div class="container-ip">
+          <div class="item">Remote Subnet(IPv4)</div>
+          <div id="ipv4_remote_subnet" class="item push-right">N/A</div>
+          <div class="item">
+            <a class="fas fa-copy" onclick="copy2clipboard(document.getElementById('ipv4_remote_subnet').innerHTML);"></a>
+          </div>
+        </div>
+        <div class="container-ip">
+          <div class="item">Public Key</div>
+          <div id="ipv4_pk" class="item push-right overflow-ellipsis">N/A</div>
+          <div class="item">
+            <a class="fas fa-copy" onclick="copy2clipboard(document.getElementById('ipv4_pk').innerHTML);"></a>
+          </div>
+        </div>
+        <div class="container-ip">
+          <div class="item">Remote Subnet(IPv6)</div>
+          <div id="ipv6_remote_subnet" class="item push-right">N/A</div>
+          <div class="item">
+            <a class="fas fa-copy" onclick="copy2clipboard(document.getElementById('ipv6_remote_subnet').innerHTML);"></a>
+          </div>
+        </div>
+        <div class="container-ip">
+          <div class="item">Public Key</div>
+          <div id="ipv6_pk" class="item push-right overflow-ellipsis">N/A</div>
+          <div class="item">
+            <a class="fas fa-copy" onclick="copy2clipboard(document.getElementById('ipv6_pk').innerHTML);"></a>
+          </div>
+        </div>
       </div>
     </div>
 

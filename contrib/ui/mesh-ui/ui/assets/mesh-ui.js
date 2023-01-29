@@ -100,6 +100,24 @@ function openTab(element, tabName) {
   $(tabName).className = "tab here";
   element.parentElement.className = "tab is-active";
   //refreshRecordsList();
+  const features = ["vpn"];
+  if (features.includes(tabName)){
+    $$("vpn")[0].setAttribute("fill", "#ffffff");
+    $("livpn").removeEventListener('mouseover', changeSvgOver);
+    $("livpn").removeEventListener('mouseout', changeSvgOut);
+  } else {
+    $$("vpn")[0].setAttribute("fill", "#aaaaaa");
+    $("livpn").addEventListener('mouseover', changeSvgOver);
+    $("livpn").addEventListener('mouseout', changeSvgOut);
+  }
+}
+
+function changeSvgOver(e) {
+  $$("vpn")[0].setAttribute("fill", "#ffffff");
+}
+
+function changeSvgOut(e) {
+  $$("vpn")[0].setAttribute("fill", "#aaaaaa");
 }
 
 function copy2clipboard(text) {
@@ -343,6 +361,43 @@ ui.getSelfInfo = () =>
       }
     });
 
+ui.getVpnInfo = () =>
+  fetch('api/tunnelrouting').then((response) => {
+    if (response.status === 200) {
+      return response.json()
+    } else {
+      response.text().then(text => {
+        showError(text);
+      }
+    )}
+});
+
+ui.showFeatures = features => {
+  for (let feature of features) {
+    $("li"+feature).classList.remove("is-hidden");
+    $("li"+feature).addEventListener('mouseover', changeSvgOver);
+    $("li"+feature).addEventListener('mouseout', changeSvgOut);
+    ui.getVpnInfo()
+    .then((info) => {
+      if (typeof info !== 'undefined') {
+        $("vpn_enable").checked = info.Enable;
+        const ipv4Map = info.IPv4RemoteSubnets;
+        for (const key of Object.keys(ipv4Map)) {
+            console.log(`${key}: ${ipv4Map[key]}`);
+            $("ipv4_remote_subnet").innerText = key;
+            $("ipv4_pk").innerText = ipv4Map[key];
+        }
+        const ipv6Map = info.IPv6RemoteSubnets;
+        for (const key of Object.keys(ipv6Map)) {
+            console.log(`${key}: ${ipv6Map[key]}`);
+            $("ipv6_remote_subnet").innerText = key;
+            $("ipv6_pk").innerText = ipv6Map[key];
+        }
+      }
+    })
+  }
+}
+  
 ui.updateSelfInfo = () =>
   ui.getSelfInfo()
     .then((info) => {
@@ -354,6 +409,7 @@ ui.updateSelfInfo = () =>
         $("priv_key").innerText = info.private_key;
         $("ipv6").innerText = info.address;
         $("version").innerText = info.build_version;
+        ui.showFeatures(info.features);
       }
     }).catch((error) => {
       showError(error.message);
