@@ -16,6 +16,7 @@ require (
 	gerace.dev/zipfs v0.2.0 // indirect
 	github.com/Arceliar/ironwood v0.0.0-20221115123222-ec61cea2f439 // indirect
 	github.com/Arceliar/phony v0.0.0-20210209235338-dde1a8dca979 // indirect
+	github.com/RiV-chain/RiVPN v0.5.0 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/fatih/color v1.12.0 // indirect
