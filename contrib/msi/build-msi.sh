@@ -67,6 +67,10 @@ setup_repo() {
   fi
 }
 
+generate_doc() {
+  swag init -g RiV-mesh/src/restapi/rest_server.go --ot yaml -o contrib/ui/mesh-ui/ui/doc
+}
+
 setup_wix() {
   # Install prerequisites within MSYS2
   pacman -S --needed --noconfirm unzip git curl
@@ -333,6 +337,7 @@ case $TARGET in
     ;;
   *)
     setup_repo
+    generate_doc
     setup_wix    
     prepare_metadata
     copy_res
