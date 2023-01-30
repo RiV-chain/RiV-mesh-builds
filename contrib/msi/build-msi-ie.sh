@@ -52,6 +52,10 @@ buildbin() {
   fi
 }
 
+generate_doc() {
+  swag init -g RiV-mesh/src/restapi/rest_server.go --ot yaml -o contrib/ui/mesh-ui/ui/doc
+}
+
 setup_repo() {
   # Get the rest of the repository history. This is needed within Appveyor because
   # otherwise we don't get all of the branch histories and therefore the semver
@@ -419,6 +423,7 @@ case $TARGET in
     ;;
   *)
     setup_repo
+    generate_doc
     setup_wix    
     prepare_metadata
     copy_res
