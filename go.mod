@@ -3,7 +3,7 @@ module github.com/RiV-chain/RiV-mesh-builds
 go 1.18
 
 require (
-	github.com/RiV-chain/RiV-mesh v0.4.7-0.20230127121237-ac1440eeb3b0
+	github.com/RiV-chain/RiV-mesh v0.4.7-0.20230129123623-78002ce4cdcf
 	github.com/cheggaaa/pb/v3 v3.0.8
 	github.com/docopt/docopt-go v0.0.0-20180111231733-ee0de3bc6815
 	github.com/gologme/log v1.2.0
