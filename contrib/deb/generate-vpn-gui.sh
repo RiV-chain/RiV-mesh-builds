@@ -46,6 +46,7 @@ else
   exit 1
 fi
 
+(cd RiV-mesh && GOOS=$GOOS GOARCH=$GOARCH ./build)
 (cd RiVPN && GOOS=$GOOS GOARCH=$GOARCH ./build)
 
 build_mesh_ui
