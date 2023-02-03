@@ -2,8 +2,9 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
-	"strings"
+	"time"
 
 	"github.com/RiV-chain/RiV-mesh/src/defaults"
 
@@ -49,8 +50,23 @@ func main() {
 	}
 
 	log.Printf("Opening: %v", confui.IndexHtml)
-	w.SetHtml(strings.Replace(splash, "http://localhost:19019", confui.IndexHtml, 1))
+	w.SetHtml(splash)
+	go redirect(func() {
+		w.Dispatch(func() { w.Navigate(confui.IndexHtml) })
+	})
 	w.Run()
+}
+
+func redirect(cb func()) {
+	for {
+		_, err := http.Get(confui.IndexHtml)
+		if err == nil {
+			cb()
+			return
+		} else {
+			time.Sleep(5 * time.Second)
+		}
+	}
 }
 
 var splash = `<!DOCTYPE html>
@@ -58,21 +74,6 @@ var splash = `<!DOCTYPE html>
 <head>
 <title>Riv mesh</title>
 </head>
-<script>
-let ep = "http://localhost:19019";
-
-function redirect() {
-  fetch(ep + '/api')
-      .then(() => {
-        window.location.replace(ep);
-      }).catch((error) => {
-        document.getElementById("error").innerHTML = "Loading....";
-        setTimeout(redirect, 5000);
-      });
-}
-redirect();
-
-</script>
 <style>
 body {
   background: #333;
@@ -225,7 +226,7 @@ body {
   
 </style>
 <body>
-<div id="error"></div>
+<div id="error">Loading....</div>
 <div class="spinner">
   <div class="blob top"></div>
   <div class="blob bottom"></div>
