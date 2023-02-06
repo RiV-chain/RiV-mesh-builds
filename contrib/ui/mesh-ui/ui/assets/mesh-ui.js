@@ -202,7 +202,6 @@ function showWindow() {
   var button_window_save = $("window_save");
   button_window_save.onclick = function () {
     info.classList.add("is-hidden");
-    //todo save peers
     var peers = document.querySelectorAll('*[id^="peer-"]');
     var peer_list = [];
     for (var i = 0; i < peers.length; ++i) {
@@ -225,6 +224,29 @@ function showWindow() {
       });    
     $("peer_list").innerHTML = "";
   };
+}
+
+var button_tunnelrouting_save = $("tunnel_routing_save");
+button_tunnelrouting_save.onclick = function () {
+  var tunnel_routing = {};
+  tunnel_routing["Enable"] = $("vpn_enable").checked;
+  var ipv4_remote_subnets = {};
+  ipv4_remote_subnets[$("ipv4_remote_subnet").value] = $("ipv4_pk").value;
+  tunnel_routing["IPv4RemoteSubnets"] = ipv4_remote_subnets;
+  var ipv6_remote_subnets = {};
+  ipv6_remote_subnets[$("ipv6_remote_subnet").value] = $("ipv6_pk").value;
+  tunnel_routing["IPv6RemoteSubnets"] = ipv6_remote_subnets;
+  fetch('api/tunnelrouting', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Riv-Save-Config': 'true',
+      },
+      body: JSON.stringify(tunnel_routing),
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 }
 
 function togglePrivKeyVisibility() {
@@ -382,17 +404,25 @@ ui.showFeatures = features => {
       if (typeof info !== 'undefined') {
         $("vpn_enable").checked = info.Enable;
         const ipv4Map = info.IPv4RemoteSubnets;
-        for (const key of Object.keys(ipv4Map)) {
-            console.log(`${key}: ${ipv4Map[key]}`);
-            $("ipv4_remote_subnet").innerText = key;
-            $("ipv4_pk").innerText = ipv4Map[key];
-        }
+		if (ipv4Map) {
+           for (const key of Object.keys(ipv4Map)) {
+				if (key) {
+				   console.log(`${key}: ${ipv4Map[key]}`);
+				   $("ipv4_remote_subnet").value = key;
+				   $("ipv4_pk").value = ipv4Map[key];
+				}
+			}
+		}
         const ipv6Map = info.IPv6RemoteSubnets;
-        for (const key of Object.keys(ipv6Map)) {
-            console.log(`${key}: ${ipv6Map[key]}`);
-            $("ipv6_remote_subnet").innerText = key;
-            $("ipv6_pk").innerText = ipv6Map[key];
-        }
+		if (ipv6Map) {
+           for (const key of Object.keys(ipv6Map)) {
+				if (key) {
+				   console.log(`${key}: ${ipv6Map[key]}`);
+				   $("ipv6_remote_subnet").value = key;
+				   $("ipv6_pk").value = ipv6Map[key];
+				}
+			}
+		}
       }
     })
   }

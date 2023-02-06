@@ -181,8 +181,8 @@
         <div class="item">
           <div class="field">
             <p class="control">
-              <label class="checkbox is-disabled">
-                <input id="vpn_enable" disabled="" type="checkbox"> Enable
+              <label class="checkbox">
+                <input id="vpn_enable" type="checkbox"> Enable
               </label>
             </p>
           </div>
@@ -194,35 +194,50 @@
             </div>
           </div>
         </article>
-        <div class="container-ip">
-          <div class="item">IPv4</div>
-          <div id="ipv4_remote_subnet" class="item push-right">N/A</div>
-          <div class="item">
-            <a class="fas fa-copy" onclick="copy2clipboard(document.getElementById('ipv4_remote_subnet').innerHTML);"></a>
-          </div>
-        </div>
-        <div class="container-ip">
-          <div class="item">Key</div>
-          <div id="ipv4_pk" class="item push-right overflow-ellipsis">N/A</div>
-          <div class="item">
-            <a class="fas fa-copy" onclick="copy2clipboard(document.getElementById('ipv4_pk').innerHTML);"></a>
-          </div>
-        </div>
-        <div class="container-ip">
-          <div class="item">IPv6</div>
-          <div id="ipv6_remote_subnet" class="item push-right">N/A</div>
-          <div class="item">
-            <a class="fas fa-copy" onclick="copy2clipboard(document.getElementById('ipv6_remote_subnet').innerHTML);"></a>
-          </div>
-        </div>
-        <div class="container-ip">
-          <div class="item">Key</div>
-          <div id="ipv6_pk" class="item push-right overflow-ellipsis">N/A</div>
-          <div class="item">
-            <a class="fas fa-copy" onclick="copy2clipboard(document.getElementById('ipv6_pk').innerHTML);"></a>
-          </div>
+		<div class="container-input">
+			<p class="control has-icons-right">
+			<input id="ipv4_remote_subnet" class="input" type="text" placeholder="192.168.0.0/24">
+			<span class="icon is-small is-right">
+				<i class="fa fa-check is-hidden"></i>
+			</span>
+			</p>
+		</div>
+		<div class="container-input">
+			<p class="control has-icons-right overflow-ellipsis">
+			<input id="ipv4_pk" class="input" type="text" placeholder="Hex(64 bytes)">
+			<span class="icon is-small is-right">
+				<i class="fa fa-check is-hidden"></i>
+			</span>
+			</p>
+		</div>
+		<div class="container-input">
+			<p class="control has-icons-right">
+			<input id="ipv6_remote_subnet" class="input" type="text" placeholder="fe80::/64">
+			<span class="icon is-small is-right">
+				<i class="fa fa-check is-hidden"></i>
+			</span>
+			</p>
+		</div>
+		<div class="container-input">
+			<p class="control has-icons-right overflow-ellipsis">
+			<input id="ipv6_pk" class="input" type="text" placeholder="Hex(64 bytes)">
+			<span class="icon is-small is-right">
+				<i class="fa fa-check is-hidden"></i>
+			</span>
+			</p>
+		</div>
+        <div style="justify-content: right; align-items: right; padding-top:5px; padding-right:12px;" class="field is-grouped">
+          <p class="control" style="z-index: 99;">
+            <a id="tunnel_routing_save" class="button is-success">
+              <span class="icon is-small">
+                <i class="fas fa-check"> </i>
+              </span>
+              <span> Save </span>
+            </a>
+          </p>
         </div>
       </div>
+
     </div>
 
     <div class="tab here is-hidden" id="keys">
