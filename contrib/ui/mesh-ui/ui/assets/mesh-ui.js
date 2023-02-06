@@ -365,12 +365,16 @@ ui.addVpnOnClickListener = () => {
   button_tunnelrouting_save.onclick = function () {
     var tunnel_routing = {};
     tunnel_routing["Enable"] = $("vpn_enable").checked;
-    var ipv4_remote_subnets = {};
-    ipv4_remote_subnets[$("ipv4_remote_subnet").value] = $("ipv4_pk").value;
-    tunnel_routing["IPv4RemoteSubnets"] = ipv4_remote_subnets;
-    var ipv6_remote_subnets = {};
-    ipv6_remote_subnets[$("ipv6_remote_subnet").value] = $("ipv6_pk").value;
-    tunnel_routing["IPv6RemoteSubnets"] = ipv6_remote_subnets;
+    if ($("ipv4_remote_subnet").value){
+      var ipv4_remote_subnets = {};
+      ipv4_remote_subnets[$("ipv4_remote_subnet").value] = $("ipv4_pk").value;
+      tunnel_routing["IPv4RemoteSubnets"] = ipv4_remote_subnets;
+    }
+    if ($("ipv6_remote_subnet").value){
+      var ipv6_remote_subnets = {};
+      ipv6_remote_subnets[$("ipv6_remote_subnet").value] = $("ipv6_pk").value;
+      tunnel_routing["IPv6RemoteSubnets"] = ipv6_remote_subnets;
+    }
     fetch('api/tunnelrouting', {
         method: 'PUT',
         headers: {
