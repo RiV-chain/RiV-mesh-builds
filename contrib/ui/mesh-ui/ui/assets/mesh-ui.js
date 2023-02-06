@@ -360,7 +360,7 @@ ui.getSelfInfo = () =>
       }
     });
 
-ui.addVpnOnClickListener = () => {
+ui.addVpnSaveOnClickListener = () => {
   var button_tunnelrouting_save = $("tunnel_routing_save");
   button_tunnelrouting_save.onclick = function () {
     var tunnel_routing = {};
@@ -386,6 +386,20 @@ ui.addVpnOnClickListener = () => {
       .catch((error) => {
         console.error('Error:', error);
       });
+  }
+};
+
+ui.toggleVpnFieldsEnable = () => {
+  $("ipv4_remote_subnet").disabled = !$("vpn_enable").checked;
+  $("ipv6_remote_subnet").disabled = !$("vpn_enable").checked;
+  $("ipv4_pk").disabled = !$("vpn_enable").checked;
+  $("ipv6_pk").disabled = !$("vpn_enable").checked;
+}
+
+ui.addVpnEnableOnClickListener = () => {
+  var button_vpn_enable = $("vpn_enable");
+  button_vpn_enable.onclick = function () {
+    ui.toggleVpnFieldsEnable();
   }
 };
 
@@ -429,7 +443,9 @@ ui.showFeatures = features => {
             }
           }
         }
-        ui.addVpnOnClickListener();
+        ui.toggleVpnFieldsEnable();
+        ui.addVpnSaveOnClickListener();
+        ui.addVpnEnableOnClickListener();
       }
     })
   }
