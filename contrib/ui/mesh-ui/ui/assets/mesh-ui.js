@@ -226,29 +226,6 @@ function showWindow() {
   };
 }
 
-var button_tunnelrouting_save = $("tunnel_routing_save");
-button_tunnelrouting_save.onclick = function () {
-  var tunnel_routing = {};
-  tunnel_routing["Enable"] = $("vpn_enable").checked;
-  var ipv4_remote_subnets = {};
-  ipv4_remote_subnets[$("ipv4_remote_subnet").value] = $("ipv4_pk").value;
-  tunnel_routing["IPv4RemoteSubnets"] = ipv4_remote_subnets;
-  var ipv6_remote_subnets = {};
-  ipv6_remote_subnets[$("ipv6_remote_subnet").value] = $("ipv6_pk").value;
-  tunnel_routing["IPv6RemoteSubnets"] = ipv6_remote_subnets;
-  fetch('api/tunnelrouting', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Riv-Save-Config': 'true',
-      },
-      body: JSON.stringify(tunnel_routing),
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-}
-
 function togglePrivKeyVisibility() {
   if (this.classList.contains("fa-eye")) {
     this.classList.remove("fa-eye");
@@ -383,6 +360,31 @@ ui.getSelfInfo = () =>
       }
     });
 
+ui.addVpnOnClickListener = () => {
+  var button_tunnelrouting_save = $("tunnel_routing_save");
+  button_tunnelrouting_save.onclick = function () {
+    var tunnel_routing = {};
+    tunnel_routing["Enable"] = $("vpn_enable").checked;
+    var ipv4_remote_subnets = {};
+    ipv4_remote_subnets[$("ipv4_remote_subnet").value] = $("ipv4_pk").value;
+    tunnel_routing["IPv4RemoteSubnets"] = ipv4_remote_subnets;
+    var ipv6_remote_subnets = {};
+    ipv6_remote_subnets[$("ipv6_remote_subnet").value] = $("ipv6_pk").value;
+    tunnel_routing["IPv6RemoteSubnets"] = ipv6_remote_subnets;
+    fetch('api/tunnelrouting', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Riv-Save-Config': 'true',
+        },
+        body: JSON.stringify(tunnel_routing),
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+};
+
 ui.getVpnInfo = () =>
   fetch('api/tunnelrouting').then((response) => {
     if (response.status === 200) {
@@ -404,25 +406,26 @@ ui.showFeatures = features => {
       if (typeof info !== 'undefined') {
         $("vpn_enable").checked = info.Enable;
         const ipv4Map = info.IPv4RemoteSubnets;
-		if (ipv4Map) {
-           for (const key of Object.keys(ipv4Map)) {
-				if (key) {
-				   console.log(`${key}: ${ipv4Map[key]}`);
-				   $("ipv4_remote_subnet").value = key;
-				   $("ipv4_pk").value = ipv4Map[key];
-				}
-			}
-		}
+        if (ipv4Map) {
+              for (const key of Object.keys(ipv4Map)) {
+            if (key) {
+              console.log(`${key}: ${ipv4Map[key]}`);
+              $("ipv4_remote_subnet").value = key;
+              $("ipv4_pk").value = ipv4Map[key];
+            }
+          }
+        }
         const ipv6Map = info.IPv6RemoteSubnets;
-		if (ipv6Map) {
-           for (const key of Object.keys(ipv6Map)) {
-				if (key) {
-				   console.log(`${key}: ${ipv6Map[key]}`);
-				   $("ipv6_remote_subnet").value = key;
-				   $("ipv6_pk").value = ipv6Map[key];
-				}
-			}
-		}
+        if (ipv6Map) {
+              for (const key of Object.keys(ipv6Map)) {
+            if (key) {
+              console.log(`${key}: ${ipv6Map[key]}`);
+              $("ipv6_remote_subnet").value = key;
+              $("ipv6_pk").value = ipv6Map[key];
+            }
+          }
+        }
+        ui.addVpnOnClickListener();
       }
     })
   }
