@@ -388,7 +388,7 @@ ui.addVpnSaveOnClickListener = () => {
         body: JSON.stringify(tunnel_routing),
       }).then((response) => {
         if (response.status === 204) {
-            showInfo("Configuration has been saved!");
+            showInfo("Settings have been saved!");
         } else {
           response.text().then(text => {
             showError(text);
