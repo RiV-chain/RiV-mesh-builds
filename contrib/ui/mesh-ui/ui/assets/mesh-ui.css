@@ -12,11 +12,15 @@
 }
 
 .ok {
-  color:green;
+  color:#2ecc71;
 }
 
 .fail {
-  color:red;
+  color:#e74c3c;
+}
+
+.warning {
+  color:#f1b70e;
 }
 
 .input {
@@ -60,13 +64,6 @@
   top: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.0);
-}
-
-.stack-top {
-  z-index: 9;
-  margin: 10px;
-  /* for demo purpose  */
-  background: rgba(255, 0, 0, 1);
 }
 
 table {
