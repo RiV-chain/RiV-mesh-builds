@@ -1,6 +1,10 @@
 "use strict";
 console.log("IE load fix");
 
+var subnetwork10 = new RegExp("^10\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/([8-9]|1[0-9]|2[0-9]|3[0-1])$");
+var subnetwork172 = new RegExp("^172\.16\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/(1[2-9]|2[0-9]|3[0-1])$");
+var subnetwork192 = new RegExp("^192\.168\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/(1[6-9]|2[0-9]|3[0-1])$");
+
 var $ = id => document.getElementById(id)
 var $$ = clazz => document.getElementsByClassName(clazz)
 var ui = ui || {};
@@ -403,6 +407,22 @@ ui.addVpnEnableOnClickListener = () => {
   }
 };
 
+ui.addVpnIpv4OnChangeListener = () => {
+  var button_ipv4_remote_subnet = $("ipv4_remote_subnet");
+  button_ipv4_remote_subnet.onchange = function () {
+    if (!subnetwork10.test($("ipv4_remote_subnet").value) && 
+        !subnetwork172.test($("ipv4_remote_subnet").value) &&
+        !subnetwork192.test($("ipv4_remote_subnet").value) &&
+        !$("ipv4_remote_subnet").value !=="0.0.0.0/0" ) {
+          $("ipv4_ok").classList.add('is-hidden');
+          $("ipv4_fail").classList.remove('is-hidden');
+    } else {
+          $("ipv4_ok").classList.remove('is-hidden');
+          $("ipv4_fail").classList.add('is-hidden');      
+    }
+  }
+};
+
 ui.getVpnInfo = () =>
   fetch('api/tunnelrouting').then((response) => {
     if (response.status === 200) {
@@ -446,6 +466,7 @@ ui.showFeatures = features => {
         ui.toggleVpnFieldsEnable();
         ui.addVpnSaveOnClickListener();
         ui.addVpnEnableOnClickListener();
+        ui.addVpnIpv4OnChangeListener();
       }
     })
   }
