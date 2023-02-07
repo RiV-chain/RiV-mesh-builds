@@ -431,6 +431,16 @@ ui.addVpnPkOnChangeListener = () => {
           $("ipv4_pk_fail").classList.add('is-hidden');      
     }
   }
+  var button_ipv6_pk = $("ipv6_pk");
+  button_ipv6_pk.onkeydown = function () {
+    if (!hex64.test($("ipv6_pk").value)) {
+          $("ipv6_pk_ok").classList.add('is-hidden');
+          $("ipv6_pk_fail").classList.remove('is-hidden');
+    } else {
+          $("ipv6_pk_ok").classList.remove('is-hidden');
+          $("ipv6_pk_fail").classList.add('is-hidden');      
+    }
+  }
 };
 
 ui.getVpnInfo = () =>
