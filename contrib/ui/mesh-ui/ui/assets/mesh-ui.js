@@ -1,9 +1,7 @@
 "use strict";
 console.log("IE load fix");
 
-const subnetwork10 = /^10\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4][])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/([8-9]|1[0-9]|2[0-9]|3[0-1])$/;
-const subnetwork172 = /^172\.16\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/(1[2-9]|2[0-9]|3[0-1])$/;
-const subnetwork192 = /^192\.168\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/(1[6-9]|2[0-9]|3[0-1])$/;
+const subnetworks = /^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4][])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4][])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/([8-9]|1[0-9]|2[0-9]|3[0-1])$/;
 const hex64 = /^[a-f0-9]{64}$/;
 
 var $ = id => document.getElementById(id)
@@ -411,9 +409,7 @@ ui.addVpnEnableOnClickListener = () => {
 ui.addVpnIpv4OnChangeListener = () => {
   var button_ipv4_remote_subnet = $("ipv4_remote_subnet");
   button_ipv4_remote_subnet.onkeydown = function () {
-    if (!subnetwork10.test($("ipv4_remote_subnet").value) && 
-        !subnetwork172.test($("ipv4_remote_subnet").value) &&
-        !subnetwork192.test($("ipv4_remote_subnet").value) &&
+    if (!subnetworks.test($("ipv4_remote_subnet").value) &&
         "0.0.0.0/0" !== $("ipv4_remote_subnet").value) {
           $("ipv4_ok").classList.add('is-hidden');
           $("ipv4_fail").classList.remove('is-hidden');
