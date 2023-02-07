@@ -1,9 +1,10 @@
 "use strict";
 console.log("IE load fix");
 
-var subnetwork10 = /^10\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4][])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/([8-9]|1[0-9]|2[0-9]|3[0-1])$/;
-var subnetwork172 = /^172\.16\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/(1[2-9]|2[0-9]|3[0-1])$/;
-var subnetwork192 = /^192\.168\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/(1[6-9]|2[0-9]|3[0-1])$/;
+const subnetwork10 = /^10\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4][])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/([8-9]|1[0-9]|2[0-9]|3[0-1])$/;
+const subnetwork172 = /^172\.16\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/(1[2-9]|2[0-9]|3[0-1])$/;
+const subnetwork192 = /^192\.168\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/(1[6-9]|2[0-9]|3[0-1])$/;
+const hex64 = /^[a-f0-9]{64}$/;
 
 var $ = id => document.getElementById(id)
 var $$ = clazz => document.getElementsByClassName(clazz)
@@ -423,6 +424,19 @@ ui.addVpnIpv4OnChangeListener = () => {
   }
 };
 
+ui.addVpnPkOnChangeListener = () => {
+  var button_ipv4_pk = $("ipv4_pk");
+  button_ipv4_pk.onkeydown = function () {
+    if (!hex64.test($("ipv4_pk").value)) {
+          $("ipv4_pk_ok").classList.add('is-hidden');
+          $("ipv4_pk_fail").classList.remove('is-hidden');
+    } else {
+          $("ipv4_pk_ok").classList.remove('is-hidden');
+          $("ipv4_pk_fail").classList.add('is-hidden');      
+    }
+  }
+};
+
 ui.getVpnInfo = () =>
   fetch('api/tunnelrouting').then((response) => {
     if (response.status === 200) {
@@ -467,6 +481,7 @@ ui.showFeatures = features => {
         ui.addVpnSaveOnClickListener();
         ui.addVpnEnableOnClickListener();
         ui.addVpnIpv4OnChangeListener();
+        ui.addVpnPkOnChangeListener();
       }
     })
   }

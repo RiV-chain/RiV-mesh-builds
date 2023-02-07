@@ -11,6 +11,14 @@
   margin: 10px;
 }
 
+.ok {
+  color:green;
+}
+
+.fail {
+  color:red;
+}
+
 .input {
   background: #ddd;
 }
