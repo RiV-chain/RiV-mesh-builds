@@ -386,10 +386,15 @@ ui.addVpnSaveOnClickListener = () => {
           'Riv-Save-Config': 'true',
         },
         body: JSON.stringify(tunnel_routing),
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+      }).then((response) => {
+        if (response.status === 204) {
+            showInfo("Configuration has been saved!");
+        } else {
+          response.text().then(text => {
+            showError(text);
+          }
+        )}
+    });
   }
 };
 
