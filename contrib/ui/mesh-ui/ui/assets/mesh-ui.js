@@ -1,7 +1,8 @@
 "use strict";
 console.log("IE load fix");
 
-const subnetworks = /^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/([8-9]|1[0-9]|2[0-9]|3[0-1])$/;
+const ipv4_subnetworks = /^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-4])\/([8-9]|1[0-9]|2[0-9]|3[0-1])$/;
+const ipv6_subnetworks = /^s*((([0-9a-f]{1,4}:){7}([0-9a-f]{1,4}|:))|(([0-9a-f]{1,4}:){6}(:[0-9a-f]{1,4}|((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3})|:))|(([0-9a-f]{1,4}:){5}(((:[0-9a-f]{1,4}){1,2})|:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3})|:))|(([0-9a-f]{1,4}:){4}(((:[0-9a-f]{1,4}){1,3})|((:[0-9a-f]{1,4})?:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9a-f]{1,4}:){3}(((:[0-9a-f]{1,4}){1,4})|((:[0-9a-f]{1,4}){0,2}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9a-f]{1,4}:){2}(((:[0-9a-f]{1,4}){1,5})|((:[0-9a-f]{1,4}){0,3}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(([0-9a-f]{1,4}:){1}(((:[0-9a-f]{1,4}){1,6})|((:[0-9a-f]{1,4}){0,4}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:))|(:(((:[0-9a-f]{1,4}){1,7})|((:[0-9a-f]{1,4}){0,5}:((25[0-5]|2[0-4]d|1dd|[1-9]?d)(.(25[0-5]|2[0-4]d|1dd|[1-9]?d)){3}))|:)))(%.+)?s*(\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$/;
 const hex64 = /^[a-f0-9]{64}$/;
 
 var $ = id => document.getElementById(id)
@@ -409,13 +410,27 @@ ui.addVpnEnableOnClickListener = () => {
 ui.addVpnIpv4OnChangeListener = () => {
   var button_ipv4_remote_subnet = $("ipv4_remote_subnet");
   button_ipv4_remote_subnet.onkeydown = function () {
-    if (!subnetworks.test($("ipv4_remote_subnet").value) &&
+    if (!ipv4_subnetworks.test($("ipv4_remote_subnet").value) &&
         "0.0.0.0/0" !== $("ipv4_remote_subnet").value) {
           $("ipv4_ok").classList.add('is-hidden');
           $("ipv4_fail").classList.remove('is-hidden');
     } else {
           $("ipv4_ok").classList.remove('is-hidden');
           $("ipv4_fail").classList.add('is-hidden');      
+    }
+  }
+};
+
+ui.addVpnIpv6OnChangeListener = () => {
+  var button_ipv6_remote_subnet = $("ipv6_remote_subnet");
+  button_ipv6_remote_subnet.onkeydown = function () {
+    if (!ipv6_subnetworks.test($("ipv6_remote_subnet").value) &&
+        "::/0" !== $("ipv6_remote_subnet").value) {
+          $("ipv6_ok").classList.add('is-hidden');
+          $("ipv6_fail").classList.remove('is-hidden');
+    } else {
+          $("ipv6_ok").classList.remove('is-hidden');
+          $("ipv6_fail").classList.add('is-hidden');      
     }
   }
 };
@@ -487,6 +502,7 @@ ui.showFeatures = features => {
         ui.addVpnSaveOnClickListener();
         ui.addVpnEnableOnClickListener();
         ui.addVpnIpv4OnChangeListener();
+        ui.addVpnIpv6OnChangeListener();
         ui.addVpnPkOnChangeListener();
       }
     })
