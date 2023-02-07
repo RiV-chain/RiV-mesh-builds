@@ -409,7 +409,7 @@ ui.addVpnEnableOnClickListener = () => {
 
 ui.addVpnIpv4OnChangeListener = () => {
   var button_ipv4_remote_subnet = $("ipv4_remote_subnet");
-  button_ipv4_remote_subnet.onchange = function () {
+  button_ipv4_remote_subnet.onkeydown = function () {
     if (!subnetwork10.test($("ipv4_remote_subnet").value) && 
         !subnetwork172.test($("ipv4_remote_subnet").value) &&
         !subnetwork192.test($("ipv4_remote_subnet").value) &&
