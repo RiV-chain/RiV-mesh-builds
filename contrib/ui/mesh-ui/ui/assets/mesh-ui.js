@@ -524,7 +524,7 @@ ui.updateSelfInfo = () =>
         $("pub_key").innerText = info.key;
         $("priv_key").innerText = info.private_key;
         $("ipv6").innerText = info.address;
-        $("version").innerText = info.build_version;
+        $("version").innerText = ''.concat('v',info.build_version);
         ui.showFeatures(info.features);
       }
     }).catch((error) => {
