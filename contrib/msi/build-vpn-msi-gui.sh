@@ -165,7 +165,6 @@ cat > updateconfig.bat << EOF
   if not exist %ALLUSERSPROFILE%\\RiV-mesh\\mesh.conf (
     if exist mesh.exe (
       mesh.exe -genconf > %ALLUSERSPROFILE%\\RiV-mesh\\mesh.conf
-      mesh.exe -genvpnconf > %ALLUSERSPROFILE%\\RiV-mesh\\vpn.conf
     )
   )
 EOF
