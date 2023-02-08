@@ -503,13 +503,13 @@ ui.showFeatures = features => {
             }
           }
         }
-        ui.toggleVpnFieldsEnable();
-        ui.addVpnSaveOnClickListener();
-        ui.addVpnEnableOnClickListener();
-        ui.addVpnIpv4OnChangeListener();
-        ui.addVpnIpv6OnChangeListener();
-        ui.addVpnPkOnChangeListener();
       }
+      ui.toggleVpnFieldsEnable();
+      ui.addVpnSaveOnClickListener();
+      ui.addVpnEnableOnClickListener();
+      ui.addVpnIpv4OnChangeListener();
+      ui.addVpnIpv6OnChangeListener();
+      ui.addVpnPkOnChangeListener();
     })
   }
 }
