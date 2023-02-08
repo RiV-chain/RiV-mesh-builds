@@ -481,7 +481,7 @@ ui.showFeatures = features => {
     $("li"+feature).addEventListener('mouseout', changeSvgOut);
     ui.getVpnInfo()
     .then((info) => {
-      if (typeof info !== 'undefined') {
+      if (info) {
         $("vpn_enable").checked = info.Enable;
         const ipv4Map = info.IPv4RemoteSubnets;
         if (ipv4Map) {
