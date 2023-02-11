@@ -53,8 +53,11 @@ mkdir -p /tmp/$PKGNAME/debian/
 mkdir -p /tmp/$PKGNAME/DEBIAN/
 mkdir -p /tmp/$PKGNAME/usr/bin/
 mkdir -p /tmp/$PKGNAME/usr/local/bin/
+mkdir -p /tmp/$PKGNAME/usr/share/riv
 mkdir -p /tmp/$PKGNAME/etc/systemd/system/
 chmod 0775 /tmp/$PKGNAME/ -R
+
+cp -r contrib/ui/mesh-ui/ui /tmp/$PKGNAME/usr/share/riv
 
 cat > /tmp/$PKGNAME/debian/changelog << EOF
 Please see https://github.com/RiV-chain/RiV-mesh/
@@ -83,6 +86,7 @@ EOF
 cat > /tmp/$PKGNAME/debian/install << EOF
 usr/bin/mesh usr/bin
 usr/bin/meshctl usr/bin
+usr/share/riv/ui usr/share/riv
 usr/local/bin/meshctl usr/local/bin
 etc/systemd/system/*.service etc/systemd/system
 EOF
@@ -134,6 +138,7 @@ cp contrib/systemd/mesh-default-config.service /tmp/$PKGNAME/etc/systemd/system/
 chmod 0775 /tmp/$PKGNAME/DEBIAN/*
 chmod 644 /tmp/$PKGNAME/etc/systemd/system/*
 chmod 755 /tmp/$PKGNAME/usr/bin/*
+chmod -R u+rwX,go+rX,g-w /tmp/$PKGNAME/usr/share/riv/ui
 
 dpkg-deb --build --root-owner-group /tmp/$PKGNAME
 cp /tmp/$PKGFILE .
