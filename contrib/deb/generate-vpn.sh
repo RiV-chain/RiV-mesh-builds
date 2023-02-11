@@ -4,7 +4,7 @@
 # mesh and enables it in systemd. You can give it the PKGARCH= argument
 # i.e. PKGARCH=i386 sh contrib/deb/generate.sh
 
-if [ `pwd` != `git rev-parse --show-toplevel` ]
+if [ "$(pwd)" != "$(git rev-parse --show-toplevel)" ]
 then
   echo "You should run this script from the top-level directory of the git repo"
   exit 1
@@ -13,7 +13,8 @@ fi
 PKGBRANCH=$(sh -c 'cd RiVPN && basename `git name-rev --name-only HEAD`')
 PKG=$(sh -c 'cd RiVPN && contrib/semver/name.sh')
 PKGVERSION=$(sh -c 'cd RiVPN && contrib/semver/version.sh --bare')
-PKGNAME=$PKG-$PKGVERSION-$PKGARCH
+PKGARCH=${PKGARCH-amd64}
+PKGNAME=$PKG-$PKGVERSION-$PKGARCH-nogui
 PKGFILE=$PKGNAME.deb
 PKGREPLACES=mesh
 
@@ -21,37 +22,29 @@ if [ $PKGBRANCH = "master" ]; then
   PKGREPLACES=mesh-develop
 fi
 
-buildbin() {
-  local CMD=$(realpath $1)
-  echo "Building: $CMD for $GOOS-$GOARCH"
-
-  (cd "$TARGET_PATH" && go build $ARGS -ldflags "${LDFLAGS}${LDFLAGS2}" -gcflags "$GCFLAGS" "$CMD")
-
-  if [ $UPX ]; then
-    upx --brute "$CMD"
-  fi
-}
-
-build_mesh_ui() {
-  buildbin ./contrib/ui/mesh-ui
-}
-
 GOOS=linux
 if [ $PKGARCH = "amd64" ]; then
   GOARCH=amd64
 elif [ $PKGARCH = "i386" ]; then
   GOARCH=386
-elif [ $PKGARCH = "arm" ]; then
-  GOARCH=386
+elif [ $PKGARCH = "mipsel" ]; then
+  GOARCH=mipsle
+elif [ $PKGARCH = "mips" ]; then
+  GOARCH=mips64
+elif [ $PKGARCH = "armhf" ]; then
+  GOARCH=arm
+elif [ $PKGARCH = "arm64" ]; then
+  GOARCH=arm64
+elif [ $PKGARCH = "armel" ]; then
+  GOARCH=arm
+  GOARM=5
 else
-  echo "Specify PKGARCH=amd64, arm or i386"
+  echo "Specify PKGARCH=amd64,i386,mips,mipsel,armhf,arm64,armel"
   exit 1
 fi
 
 (cd RiV-mesh && GOOS=$GOOS GOARCH=$GOARCH ./build)
 (cd RiVPN && GOOS=$GOOS GOARCH=$GOARCH ./build)
-
-build_mesh_ui
 
 echo "Building $PKGFILE"
 
@@ -61,33 +54,7 @@ mkdir -p /tmp/$PKGNAME/DEBIAN/
 mkdir -p /tmp/$PKGNAME/usr/bin/
 mkdir -p /tmp/$PKGNAME/usr/local/bin/
 mkdir -p /tmp/$PKGNAME/etc/systemd/system/
-mkdir -p /tmp/$PKGNAME/usr/share/applications/
-mkdir -p /tmp/$PKGNAME/etc/
-mkdir -p /tmp/$PKGNAME/usr/share/riv
-mkdir -p /tmp/$PKGNAME/etc/xdg/autostart
 chmod 0775 /tmp/$PKGNAME/ -R
-
-for resolution in 16x16 24x24 32x32 48x48 64x64 192x192 256x256 512x512; do
-  echo "Converting icon for: $resolution"
-  mkdir -p /tmp/$PKGNAME/usr/share/icons/hicolor/$resolution/apps && \
-  convert -colorspace sRGB logos/riv.png -resize $resolution PNG8:/tmp/$PKGNAME/usr/share/icons/hicolor/$resolution/apps/riv.png  && \
-  chmod 644 /tmp/$PKGNAME/usr/share/icons/hicolor/$resolution/apps/riv.png
-done
-
-cp -r contrib/ui/mesh-ui/ui /tmp/$PKGNAME/usr/share/riv
-
-cat > /tmp/$PKGNAME/usr/share/applications/riv.desktop << EOF
-[Desktop Entry]
-Name=RiV mesh
-GenericName=Mesh network
-Comment=RiV-mesh is an early-stage implementation of a fully end-to-end encrypted IPv6 network
-Exec=sh -c "/usr/bin/mesh-ui"
-Terminal=false
-Type=Application
-Icon=riv
-Categories=Network;FileTransfer;
-StartupNotify=false
-EOF
 
 cat > /tmp/$PKGNAME/debian/changelog << EOF
 Please see https://github.com/RiV-chain/RiV-mesh/
@@ -116,22 +83,9 @@ EOF
 cat > /tmp/$PKGNAME/debian/install << EOF
 usr/bin/mesh usr/bin
 usr/bin/meshctl usr/bin
-usr/bin/mesh-ui usr/bin
 usr/local/bin/meshctl usr/local/bin
-usr/share/riv/ui usr/share/riv
-etc/xdg/autostart/riv.desktop etc/xdg/autostart
 etc/systemd/system/*.service etc/systemd/system
-usr/share/applications/riv.desktop usr/share/applications
-usr/share/icons/hicolor/16x16/apps/riv.png usr/share/icons/hicolor/16x16/apps
-usr/share/icons/hicolor/24x24/apps/riv.png usr/share/icons/hicolor/24x24/apps
-usr/share/icons/hicolor/32x32/apps/riv.png usr/share/icons/hicolor/32x32/apps
-usr/share/icons/hicolor/48x48/apps/riv.png usr/share/icons/hicolor/48x48/apps
-usr/share/icons/hicolor/64x64/apps/riv.png usr/share/icons/hicolor/64x64/apps
-usr/share/icons/hicolor/192x192/apps/riv.png usr/share/icons/hicolor/192x192/apps
-usr/share/icons/hicolor/256x256/apps/riv.png usr/share/icons/hicolor/256x256/apps
-usr/share/icons/hicolor/512x512/apps/riv.png usr/share/icons/hicolor/512x512/apps
 EOF
-
 cat > /tmp/$PKGNAME/DEBIAN/postinst << EOF
 #!/bin/sh
 
@@ -147,7 +101,7 @@ if [ -f /etc/mesh.conf ]; then
   /usr/bin/mesh -useconf -normaliseconf < /var/backups/mesh.conf.`date +%Y%m%d` > /etc/mesh.conf
 else
   echo "Generating initial configuration file /etc/mesh.conf"
-  echo "Please familiarise yourself with this file before starting Mesh"
+  echo "Please familiarise yourself with this file before starting RiV-mesh"
   sh -c 'umask 0027 && /usr/bin/mesh -genconf > /etc/mesh.conf'
 fi
 chgrp mesh /etc/mesh.conf
@@ -157,10 +111,7 @@ if command -v systemctl >/dev/null; then
   systemctl enable mesh || echo -n "systemctl enable failed!"
   systemctl restart mesh || echo -n "systemctl restart failed!"
 fi
-update-icon-caches /usr/share/icons/*
-update-desktop-database /usr/share/applications
 EOF
-
 cat > /tmp/$PKGNAME/DEBIAN/prerm << EOF
 #!/bin/sh
 if command -v systemctl >/dev/null; then
@@ -173,16 +124,16 @@ EOF
 
 cp RiVPN/mesh /tmp/$PKGNAME/usr/bin/
 cp RiV-mesh/meshctl /tmp/$PKGNAME/usr/bin/
-cp mesh-ui /tmp/$PKGNAME/usr/bin/
 ln -s /usr/bin/meshctl /tmp/$PKGNAME/usr/local/bin/meshctl
-cp contrib/systemd/*.service /tmp/$PKGNAME/etc/systemd/system/
-cp /tmp/$PKGNAME/usr/share/applications/riv.desktop /tmp/$PKGNAME/etc/xdg/autostart
+if [ "$LOGLEVEL" = "DEBUG" ]; then cp contrib/systemd/mesh-debug.service /tmp/$PKGNAME/etc/systemd/system/mesh.service
+else
+    cp contrib/systemd/mesh.service /tmp/$PKGNAME/etc/systemd/system/
+fi
+
+cp contrib/systemd/mesh-default-config.service /tmp/$PKGNAME/etc/systemd/system/
 chmod 0775 /tmp/$PKGNAME/DEBIAN/*
 chmod 644 /tmp/$PKGNAME/etc/systemd/system/*
-chmod 644 /tmp/$PKGNAME/usr/share/applications/riv.desktop
-chmod 644 /tmp/$PKGNAME/etc/xdg/autostart/*
 chmod 755 /tmp/$PKGNAME/usr/bin/*
-chmod -R u+rwX,go+rX,g-w /tmp/$PKGNAME/usr/share/riv/ui
 
 dpkg-deb --build --root-owner-group /tmp/$PKGNAME
 cp /tmp/$PKGFILE .
