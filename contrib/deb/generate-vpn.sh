@@ -53,6 +53,7 @@ mkdir -p /tmp/$PKGNAME/debian/
 mkdir -p /tmp/$PKGNAME/DEBIAN/
 mkdir -p /tmp/$PKGNAME/usr/bin/
 mkdir -p /tmp/$PKGNAME/usr/local/bin/
+mkdir -p /tmp/$PKGNAME/usr/share/riv
 mkdir -p /tmp/$PKGNAME/etc/systemd/system/
 chmod 0775 /tmp/$PKGNAME/ -R
 
