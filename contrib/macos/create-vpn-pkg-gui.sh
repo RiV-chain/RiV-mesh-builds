@@ -203,4 +203,4 @@ cat > pkgbuild/flat/Distribution << EOF
 EOF
 
 # Finally pack the .pkg
-( cd pkgbuild/flat && xar --compression none -cf "../../${PKGNAME}-${PKGVERSION}-macos-${PKGARCH}.pkg" * )
+( cd pkgbuild/flat && xar --compression none -cf "../../${PKGNAME}-vpn-${PKGVERSION}-macos-${PKGARCH}.pkg" * )
