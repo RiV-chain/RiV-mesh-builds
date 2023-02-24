@@ -55,7 +55,7 @@ test -f RiV-mesh/mesh || (echo "mesh binary not found"; exit 1)
 test -f RiV-mesh/meshctl || (echo "meshctl binary not found"; exit 1)
 test -f mesh-ui || (echo "mesh-ui binary not found"; exit 1)
 test -f contrib/macos/mesh.plist || (echo "contrib/macos/mesh.plist not found"; exit 1)
-test -f contrib/semver/version.sh || (echo "contrib/semver/version.sh not found"; exit 1)
+test -f RiVPN/contrib/semver/version.sh || (echo "RiVPN/contrib/semver/version.sh not found"; exit 1)
 
 # Delete the pkgbuild folder if it already exists
 test -d pkgbuild && rm -rf pkgbuild
@@ -119,7 +119,7 @@ chmod 755 pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS/open-mesh-ui
 
 # Work out metadata for the package info
 PKGNAME=$(sh -c 'cd RiV-mesh && contrib/semver/name.sh')
-PKGVERSION=$(sh -c 'cd RiV-mesh && contrib/semver/version.sh --bare')
+PKGVERSION=$(sh -c 'cd RiVPN && contrib/semver/version.sh --bare')
 
 # Create the Info.plist file
 cat > pkgbuild/root/Applications/RiV-mesh.app/Contents/Info.plist << EOF
