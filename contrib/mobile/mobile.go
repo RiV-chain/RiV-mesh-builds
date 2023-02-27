@@ -129,7 +129,7 @@ func (m *Mesh) StartJSON(configjson []byte) error {
 	return nil
 }
 
-// Send sends a packet to Mesh. It should be a fully formed
+// Send sends a packet to RiV-mesh. It should be a fully formed
 // IPv6 packet
 func (m *Mesh) Send(p []byte) error {
 	if m.iprwc == nil {
@@ -139,7 +139,7 @@ func (m *Mesh) Send(p []byte) error {
 	return nil
 }
 
-// Send sends a packet from given buffer to Yggdrasil. From first byte up to length.
+// Send sends a packet from given buffer to RiV-mesh. From first byte up to length.
 func (m *Mesh) SendBuffer(p []byte, length int) error {
 	if m.iprwc == nil {
 		return nil
@@ -151,7 +151,7 @@ func (m *Mesh) SendBuffer(p []byte, length int) error {
 	return nil
 }
 
-// Recv waits for and reads a packet coming from Yggdrasil. It
+// Recv waits for and reads a packet coming from RiV-mesh. It
 // will be a fully formed IPv6 packet
 func (m *Mesh) Recv() ([]byte, error) {
 	if m.iprwc == nil {
@@ -162,7 +162,7 @@ func (m *Mesh) Recv() ([]byte, error) {
 	return buf[:n], nil
 }
 
-// Recv waits for and reads a packet coming from Yggdrasil to given buffer, returning size of packet
+// Recv waits for and reads a packet coming from RiV-mesh to given buffer, returning size of packet
 func (m *Mesh) RecvBuffer(buf []byte) (int, error) {
 	if m.iprwc == nil {
 		return 0, nil
