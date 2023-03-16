@@ -102,9 +102,6 @@ prepare_metadata() {
 }
 
 copy_res(){
-  go-winres simply --icon logos/riv.ico --file-version $PKGVERSION --file-description "RiV-mesh (c) GUI, 2023 RIV CHAIN" \
-  --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2023, RIV CHAIN" --manifest gui
-  cp *.syso contrib/ui/mesh-ui
   #Build winres
   go-winres simply --icon logos/riv.ico --file-version $PKGVERSION --file-description "RiV-mesh (c) service, 2023 RIV CHAIN" \
   --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2023, RIV CHAIN"
@@ -128,13 +125,9 @@ build_vpn() {
   [ "${PKGARCH}" == "arm" ] && (cd RiVPN && GOOS=windows GOARCH=arm CGO_ENABLED=0 ./build)
 }
 
-build_mesh_ui() {
-  buildbin ./contrib/ui/mesh-ui
-}
-
 sign_exe() {
   #Sign Mesh binaries
-  [ "${SIGN}" == "sign" ] && cmd \""/c signtool sign /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a RiVPN/mesh.exe RiV-mesh/meshctl.exe mesh-ui.exe"\"
+  [ "${SIGN}" == "sign" ] && cmd \""/c signtool sign /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a RiVPN/mesh.exe RiV-mesh/meshctl.exe"\"
 }
 
 prepare_msi_build() {
@@ -229,9 +222,9 @@ cat > wix.xml << EOF
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />
 
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="DesktopFolder"  SourceName="Desktop"/>
       <Directory Id="${PKGINSTFOLDER}" Name="PFiles">
         <Directory Id="MeshInstallFolder" Name="RiV-mesh">
+
           <Component Id="MainExecutable" Guid="c2119231-2aa3-4962-867a-9759c87beb24">
             <File
               Id="Mesh"
@@ -239,13 +232,15 @@ cat > wix.xml << EOF
               DiskId="1"
               Source="mesh.exe"
               KeyPath="yes" />
+
             <File
               Id="Wintun"
               Name="wintun.dll"
               DiskId="1"
               Source="${PKGWINTUNDLL}" />
+
             <ServiceInstall
-              Id="MeshServiceInstaller"
+              Id="ServiceInstaller"
               Account="LocalSystem"
               Description="RiV-mesh Network router process"
               DisplayName="RiV-mesh Service"
@@ -254,8 +249,9 @@ cat > wix.xml << EOF
               Name="Mesh"
               Start="auto"
               Type="ownProcess"
-              Arguments='-useconffile "%ALLUSERSPROFILE%\\RiV-mesh\\mesh.conf" -logto "%ALLUSERSPROFILE%\\RiV-mesh\\mesh.log" -httpaddress "http://localhost:19019" -wwwroot "[MeshInstallFolder]ui.zip"'
+              Arguments='-useconffile "%ALLUSERSPROFILE%\\RiV-mesh\\mesh.conf" -logto "%ALLUSERSPROFILE%\\RiV-mesh\\mesh.log"'
               Vital="yes" />
+
             <ServiceControl
               Id="MeshServiceControl"
               Name="Mesh"
@@ -263,6 +259,7 @@ cat > wix.xml << EOF
               Stop="both"
               Remove="uninstall" />
           </Component>
+
           <Component Id="CtrlExecutable" Guid="a916b730-974d-42a1-b687-d9d504cbb86a">
             <File
               Id="Meshctl"
@@ -280,23 +277,6 @@ cat > wix.xml << EOF
               System="yes"/>
           </Component>
 
-          <Component Id="UIExecutable" Guid="ef9f30e0-8274-4526-835b-51bc09b5b1b7">
-
-            <File
-              Id="MeshUI"
-              Name="mesh-ui.exe"
-              DiskId="1"
-              Source="mesh-ui.exe"
-              KeyPath="yes" />
-            <File
-              Id="UiAssets"
-              Name="ui.zip"
-              DiskId="1"
-              Source="${PKG_UI_ASSETS_ZIP}" />
-
-          </Component>
-
-
           <Component Id="ConfigScript" Guid="64a3733b-c98a-4732-85f3-20cd7da1a785">
             <File
               Id="Configbat"
@@ -311,9 +291,7 @@ cat > wix.xml << EOF
 
     <Feature Id="MeshFeature" Title="Mesh" Level="1">
       <ComponentRef Id="MainExecutable" />
-      <ComponentRef Id="UIExecutable" />
       <ComponentRef Id="CtrlExecutable" />
-      <ComponentRef Id="cmpDesktopShortcut" />
       <ComponentRef Id="ConfigScript" />
     </Feature>
 
@@ -325,24 +303,6 @@ cat > wix.xml << EOF
       Return="check"
       Impersonate="yes" />
 
-    <!-- Step 2: Add UI to your installer / Step 4: Trigger the custom action -->
-    <UI>
-        <UIRef Id="WixUI_Minimal" />
-        <Publish Dialog="ExitDialog"
-            Control="Finish"
-            Event="DoAction"
-            Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
-    </UI>
-    <WixVariable Id="WixUILicenseRtf" Value="${PKGLICENSEFILE}" />
-    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch RiV-mesh" />
-    <CustomAction Id="LaunchApplication"
-      FileKey="MeshUI"
-      Impersonate="yes"
-      ExeCommand=""
-      Return="asyncNoWait" />
-
-    <!-- Step 3: Include the custom action -->
-    <Property Id="ASSISTANCE_START_VIA_REGISTRY">1</Property>
     <InstallExecuteSequence>
       <Custom
         Action="UpdateGenerateConfig"
@@ -350,27 +310,6 @@ cat > wix.xml << EOF
           NOT Installed AND NOT REMOVE
       </Custom>
     </InstallExecuteSequence>
-
-    <Component Id="cmpDesktopShortcut" Guid="e32e4d07-abf8-4c37-a2c3-1ca4b4f98adc" Directory="DesktopFolder" >
-        <Shortcut Id="RiVMeshDesktopShortcut"
-             Name="RiV-mesh"
-             Description="RiV-mesh is IoT E2E encrypted network"
-             Directory="DesktopFolder"
-             Target="[MeshInstallFolder]mesh-ui.exe"
-             WorkingDirectory="MeshInstallFolder"/>
-        <RegistryValue Root="HKCU"
-            Key="Software\RiV-chain\RiV-mesh"
-            Name="installed"
-            Type="integer"
-            Value="1"
-            KeyPath="yes" />
-        <RegistryValue Id="MerAs.rst" Root="HKCU" Action="write"
-            Key="Software\Microsoft\Windows\CurrentVersion\Run"
-            Name="RiV-mesh client"
-            Type="string"
-            Value='"[MeshInstallFolder]mesh-ui.exe"' />
-        <Condition>ASSISTANCE_START_VIA_REGISTRY</Condition>
-     </Component>
 
   </Product>
 </Wix>
@@ -382,15 +321,15 @@ build_msi(){
   # Generate the MSI
   CANDLEFLAGS="-nologo"
   LIGHTFLAGS="-nologo -spdb -sice:ICE71 -sice:ICE61"
-  wixbin/candle $CANDLEFLAGS -out ${PKGNAME}-${PKGVERSION}-${PKGARCH}.wixobj -arch ${PKGARCH} wix.xml && \
-  wixbin/light $LIGHTFLAGS -ext WixUIExtension -ext WixUtilExtension -out ${PKGNAME}-${PKGVERSION}-${PKGARCH}.msi ${PKGNAME}-${PKGVERSION}-${PKGARCH}.wixobj
+  wixbin/candle $CANDLEFLAGS -out ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.wixobj -arch ${PKGARCH} wix.xml && \
+  wixbin/light $LIGHTFLAGS -ext WixUIExtension -ext WixUtilExtension -out ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.msi ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.wixobj
 }
 
 sign_msi() {
   #Sign MSI
   if [[ "${SIGN}" == "sign" ]];
   then
-    cmd \""/c signtool sign /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a ${PKGNAME}-${PKGVERSION}-${PKGARCH}.msi"\"
+    cmd \""/c signtool sign /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.msi"\"
   fi
 }
 
@@ -407,12 +346,11 @@ case $TARGET in
   *)
     setup_repo
     generate_doc
-    setup_wix
+    setup_wix    
     prepare_metadata
     copy_res
     build_mesh
     build_vpn
-    build_mesh_ui
     sign_exe
     prepare_msi_build
     build_msi
