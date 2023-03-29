@@ -3,7 +3,7 @@ Repository for RiV-mesh builds such as Windows MSI, Linux deb and MacOS pkg.
 
 ## Pre-build steps:
 ```
-$ git clone  --recurse-submodules --remote-submodules git@github.com:RiV-chain/RiV-mesh-builds.git
+$ git clone --recursive https://github.com/RiV-chain/RiV-mesh-builds.git
 $ go install github.com/swaggo/swag/cmd/swag@latest
 $ swag init -g RiV-mesh/src/restapi/rest_server.go --ot yaml -o contrib/ui/mesh-ui/ui/doc
 ```
