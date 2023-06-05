@@ -13,6 +13,7 @@ require (
 )
 
 require (
+	fyne.io/systray v1.10.0 // indirect
 	gerace.dev/zipfs v0.2.0 // indirect
 	github.com/Arceliar/ironwood v0.0.0-20221115123222-ec61cea2f439 // indirect
 	github.com/Arceliar/phony v0.0.0-20210209235338-dde1a8dca979 // indirect
@@ -29,6 +30,7 @@ require (
 	github.com/getlantern/multipath v0.0.0-20220920195041-55195f38df73 // indirect
 	github.com/getlantern/ops v0.0.0-20190325191751-d70cb0d6f85f // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
+	github.com/godbus/dbus/v5 v5.0.4 // indirect
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/hjson/hjson-go v3.1.0+incompatible // indirect
 	github.com/ip2location/ip2location-go/v9 v9.5.0 // indirect
@@ -42,6 +44,7 @@ require (
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
 	github.com/rivo/uniseg v0.3.4 // indirect
 	github.com/slonm/tableprinter v0.0.0-20230107100804-643098716018 // indirect
+	github.com/tevino/abool v1.2.0 // indirect
 	github.com/vikulin/sctp v0.0.0-20221009200520-ae0f2830e422 // indirect
 	github.com/vorot93/golang-signals v0.0.0-20170221070717-d9e83421ce45 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
