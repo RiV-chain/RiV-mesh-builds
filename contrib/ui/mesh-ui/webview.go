@@ -8,6 +8,9 @@ import (
 
 	"github.com/RiV-chain/RiV-mesh/src/defaults"
 
+	_ "embed"
+
+	"fyne.io/systray"
 	"github.com/docopt/docopt-go"
 	"github.com/pkg/browser"
 )
@@ -32,12 +35,24 @@ var confui struct {
 
 var uiVersion = "0.0.1"
 
+//go:embed ui/favicon.ico
+var icon []byte
+var mainWindowCh chan struct{}
+
 func main() {
 	opts, _ := docopt.ParseArgs(usage, os.Args[1:], uiVersion)
 	opts.Bind(&confui)
 	if !confui.Console {
 		Console(false)
 	}
+	mainWindowCh = make(chan struct{})
+	go mainWindow()
+	systray.Run(onReady, func() {
+		os.Exit(0)
+	})
+}
+
+func mainWindow() {
 	debug := true
 	w := New(debug)
 	defer w.Destroy()
@@ -55,6 +70,7 @@ func main() {
 		w.Dispatch(func() { w.Navigate(confui.IndexHtml) })
 	})
 	w.Run()
+	mainWindowCh <- struct{}{}
 }
 
 func redirect(cb func()) {
@@ -67,6 +83,32 @@ func redirect(cb func()) {
 			time.Sleep(5 * time.Second)
 		}
 	}
+}
+
+func onReady() {
+	systray.SetIcon(icon)
+	systray.SetTitle("RiV-mesh")
+	systray.SetTooltip("RiV-mesh")
+	mShow := systray.AddMenuItem("Show", "Show")
+	mShow.Enable()
+	go func() {
+		for {
+			<-mShow.ClickedCh
+			select {
+			case <-mainWindowCh:
+				go mainWindow()
+			default:
+			}
+		}
+	}()
+	systray.AddSeparator()
+	mQuit := systray.AddMenuItem("Quit", "Quit the whole app")
+	mQuit.Enable()
+	go func() {
+		<-mQuit.ClickedCh
+		systray.Quit()
+		log.Println("Quit")
+	}()
 }
 
 var splash = `<!DOCTYPE html>
