@@ -1,6 +1,8 @@
 # RiV-mesh-build
 Repository for RiV-mesh builds such as Windows MSI, Linux deb and MacOS pkg.
+
 Desktop GUI related artifacts such as app icons, styles, layouts can be found here **contrib/ui/mesh-ui/ui**
+
 NAS GUI **contrib/ui/nas-xxx**
 
 ## Pre-build steps:
