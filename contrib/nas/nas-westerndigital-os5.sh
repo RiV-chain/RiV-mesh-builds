@@ -95,7 +95,7 @@ cp /tmp/WDMyCloudEX4100_mesh_$PKGVERSION.bin* "$curent_dir"
 
 cp /tmp/WDMyCloudMirror_mesh_$PKGVERSION.bin* "$curent_dir"
 
-cp /tmp/WDMyCloudEX2Ultra_mesh_$PKGVERSION.bin* "$curent_dir"
+cp /tmp/MyCloudEX2Ultra_mesh_$PKGVERSION.bin* "$curent_dir"
 
 rm -rf /tmp/$PKGFOLDER
 
