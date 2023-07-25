@@ -1,4 +1,4 @@
-var ed = {
+var riv = {
   partnerId: 1950,
   applicationName: 'RiV-Mesh App',
   nasOSName: 'My Cloud OS',
