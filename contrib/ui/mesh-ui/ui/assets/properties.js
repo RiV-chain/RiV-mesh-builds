@@ -1,1 +1,3 @@
-var riv = {};
+var riv = {
+    useAuthNASRichScreen: false
+};

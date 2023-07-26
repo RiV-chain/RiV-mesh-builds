@@ -2,6 +2,7 @@ var riv = {
 	partnerId: 1126,
 	brand: 'RiV Mesh',
 	applicationName: 'RiV Mesh Synology DSM App',
+	useAuthNASRichScreen: true,
 	nasOSName: 'Synology DSM',
 	nasVisitEDWebsiteLogin: "https://github.com/RiV-chain/RiV-mesh",
 	nasVisitEDWebsiteSignup: "https://github.com/RiV-chain/RiV-mesh",

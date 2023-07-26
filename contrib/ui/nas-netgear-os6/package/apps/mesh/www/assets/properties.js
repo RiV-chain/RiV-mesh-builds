@@ -1,6 +1,7 @@
 var riv = {
 	partnerId: 252,
 	applicationName: 'RiV-Mesh App',
+	useAuthNASRichScreen: false,
 	nasOSName: 'Ready NAS OS 6',
 	vaultUrl: "https://github.com/RiV-chain/RiV-mesh",
 	basicEDWebsite: "https://github.com/RiV-chain/RiV-mesh",
