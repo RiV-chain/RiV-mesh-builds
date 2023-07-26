@@ -120,7 +120,7 @@ build_mesh() {
 
 sign_exe() {
   #Sign Mesh binaries
-  [ "${SIGN}" == "sign" ] && cmd \""/c signtool sign /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a RiV-mesh/mesh.exe RiV-mesh/meshctl.exe"\"
+  [ "${SIGN}" == "sign" ] && cmd \""/c signtool sign /debug /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a RiV-mesh/mesh.exe RiV-mesh/meshctl.exe"\"
 }
 
 prepare_msi_build() {
@@ -407,7 +407,7 @@ sign_msi() {
   #Sign MSI
   if [[ "${SIGN}" == "sign" ]];
   then
-    cmd \""/c signtool sign /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a ${PKGNAME}-${PKGVERSION}-${PKGARCH}-win7-ie.msi"\"
+    cmd \""/c signtool sign /debug /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a ${PKGNAME}-${PKGVERSION}-${PKGARCH}-win7-ie.msi"\"
   fi
 }
 
