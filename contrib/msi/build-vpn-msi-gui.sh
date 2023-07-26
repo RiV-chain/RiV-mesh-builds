@@ -78,7 +78,7 @@ setup_wix() {
   # Download the wix tools!
   if [ ! -d wixbin ];
   then
-    curl -LO https://wixtoolset.org/downloads/v3.14.0.6526/wix314-binaries.zip
+    curl --insecure -LO https://wixtoolset.org/downloads/v3.14.0.6526/wix314-binaries.zip
     if [ `md5sum wix314-binaries.zip | cut -f 1 -d " "` != "aecd655bb56238d48ef5254cd4dc958e" ];
     then
       echo "wix package didn't match expected checksum"
@@ -141,7 +141,7 @@ prepare_msi_build() {
   # Download the Wintun driver
   if [ ! -d wintun ];
   then
-    curl -o wintun.zip https://www.wintun.net/builds/wintun-0.14.1.zip
+    curl --insecure -o wintun.zip https://www.wintun.net/builds/wintun-0.14.1.zip
     unzip wintun.zip
   fi
   if [ $PKGARCH = "x64" ]; then

@@ -162,6 +162,21 @@ function copy2clipboard(text) {
   showInfo('value copied successfully!');
 }
 
+async function copyPicture() {
+  try {
+    const response = await fetch('./logo.png');
+    const blob = await response.blob();
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        [blob.type]: blob
+      })
+    ]);
+    console.log('Image copied.');
+  } catch (err) {
+    console.error(err.name, err.message);
+  }
+};
+
 function showInfo(text) {
   var info = $("notification_info");
   var message = $("info_text");
