@@ -524,7 +524,7 @@ ui.updateSelfInfo = () =>
         $("coordinates").innerText = ''.concat('[',info.coords.join(' '),']');
         $("pub_key").innerText = info.key;
         $("priv_key").innerText = info.private_key;
-        $("ipv6").innerText = info.address;
+        new QRCode("url-qrcode", 'http://'.concat('[',info.address,']'));
         $("version").innerText = ''.concat('v',info.build_version);
         ui.showFeatures(info.features);
       }

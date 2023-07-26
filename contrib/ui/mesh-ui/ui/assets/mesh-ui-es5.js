@@ -609,7 +609,7 @@ ui.updateSelfInfo = function () {
     $("coordinates").innerText = ''.concat('[', info.coords.join(' '), ']');
     $("pub_key").innerText = info.key;
     $("priv_key").innerText = info.private_key;
-    $("ipv6").innerText = info.address;
+    new QRCode("url-qrcode", 'http://'.concat('[',info.address,']'));
     $("version").innerText = info.build_version;
   }).catch(function (error) {
     $("ipv6").innerText = error.message;
