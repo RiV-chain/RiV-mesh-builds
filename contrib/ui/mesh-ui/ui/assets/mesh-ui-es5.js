@@ -609,7 +609,16 @@ ui.updateSelfInfo = function () {
     $("coordinates").innerText = ''.concat('[', info.coords.join(' '), ']');
     $("pub_key").innerText = info.key;
     $("priv_key").innerText = info.private_key;
-    new QRCode("url-qrcode", 'http://'.concat('[',info.address,']'));
+    new QRCode("url-qrcode",         
+    {
+      text: 'http://'.concat('[',info.address,']'),
+      width: 128,
+      height: 128,
+      colorDark : "#000000",
+      colorLight : "#ffffff",
+      correctLevel : QRCode.CorrectLevel.H
+    }
+    );
     $("version").innerText = info.build_version;
   }).catch(function (error) {
     $("ipv6").innerText = error.message;
