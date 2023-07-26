@@ -133,3 +133,9 @@ footer {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+@media (max-width: 640px) {
+  #qr-code-table td:first-child {
+      display: none;
+  }
+}
