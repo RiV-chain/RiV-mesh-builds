@@ -1,0 +1,14 @@
+#!/bin/sh
+#we want read:
+#export HTTP_COOKIE='wduser=admin; wdpwd=L4edNyoCC15.kDBLIN05480'
+
+IFS=';'
+for x in $HTTP_COOKIE
+do
+    eval $x
+done
+[ -z ${wduser} ] && exit 1
+[ -z ${wdpwd} ] && exit 1
+
+S=$(curl -s -k -L 'http://localhost/nas/v1/auth' -X POST -H 'Referer: http://localhost/' -H 'Origin: http://localhost' -H 'Content-Type: application/json' --data-raw '{"username":"${wduser}","password":"${wdpwd}"}') | grep 'expires'
+[ 0 -eq ${#S} ] && exit 1 || exit 0
