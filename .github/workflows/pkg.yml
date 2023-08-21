@@ -33,6 +33,10 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: 1.21
+      
+      - name: Prepare dependencies
+        run: |
+          go install github.com/swaggo/swag/cmd/swag@latest
 
       - name: Build package
         env:
@@ -68,6 +72,10 @@ jobs:
         with:
           go-version: 1.21
 
+      - name: Prepare dependencies
+        run: |
+          go install github.com/swaggo/swag/cmd/swag@latest
+
       - name: Build package
         env:
           PKGARCH: ${{ matrix.pkgarch }}
@@ -101,6 +109,11 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: 1.21
+
+      - name: Prepare dependencies
+        run: |
+          go install github.com/swaggo/swag/cmd/swag@latest
+          go install github.com/tc-hib/go-winres@latest
 
       - name: Build package
         run: |
