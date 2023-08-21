@@ -534,6 +534,7 @@ ui.updateSelfInfo = () =>
   ui.getSelfInfo()
     .then((info) => {
       if (typeof info !== 'undefined') {
+        $("domain").innerText = info.domain;
         $("ipv6").innerText = info.address;
         $("subnet").innerText = info.subnet;
         $("coordinates").innerText = ''.concat('[',info.coords.join(' '),']');
