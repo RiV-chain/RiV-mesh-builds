@@ -604,7 +604,7 @@ ui.getSelfInfo = function () {
 };
 ui.updateSelfInfo = function () {
   return ui.getSelfInfo().then(function (info) {
-    $("domain").innerText = info.domain;
+    $("domain").innerText = info.domain+info.tld;
     $("ipv6").innerText = info.address;
     $("subnet").innerText = info.subnet;
     $("coordinates").innerText = ''.concat('[', info.coords.join(' '), ']');
