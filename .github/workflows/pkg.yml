@@ -118,6 +118,7 @@ jobs:
       - name: Build package
         run: |
           sh ./contrib/msi/build-msi-gui.sh ${{ matrix.pkgarch }}
+          sh ./contrib/msi/build-msi-ie.sh ${{ matrix.pkgarch }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
