@@ -75,6 +75,7 @@ jobs:
       - name: Prepare dependencies
         run: |
           go install github.com/swaggo/swag/cmd/swag@latest
+          brew install coreutils
 
       - name: Build package
         env:
