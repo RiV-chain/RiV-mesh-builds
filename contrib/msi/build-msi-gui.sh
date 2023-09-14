@@ -78,7 +78,7 @@ setup_wix() {
   # Download the wix tools!
   if [ ! -d wixbin ];
   then
-    curl -LO https://wixtoolset.org/downloads/v3.14.0.6526/wix314-binaries.zip
+    curl --insecure -LO https://wixtoolset.org/downloads/v3.14.0.6526/wix314-binaries.zip
     if [ `md5sum wix314-binaries.zip | cut -f 1 -d " "` != "aecd655bb56238d48ef5254cd4dc958e" ];
     then
       echo "wix package didn't match expected checksum"
@@ -127,14 +127,14 @@ build_mesh_ui() {
 
 sign_exe() {
   #Sign Mesh binaries
-  [ "${SIGN}" == "sign" ] && cmd \""/c signtool sign /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a RiV-mesh/mesh.exe RiV-mesh/meshctl.exe mesh-ui.exe"\"
+  [ "${SIGN}" == "sign" ] && cmd \""/c signtool sign /debug /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a RiV-mesh/mesh.exe RiV-mesh/meshctl.exe mesh-ui.exe"\"
 }
 
 prepare_msi_build() {
   # Download the Wintun driver
   if [ ! -d wintun ];
   then
-    curl -o wintun.zip https://www.wintun.net/builds/wintun-0.14.1.zip
+    curl --insecure -o wintun.zip https://www.wintun.net/builds/wintun-0.14.1.zip
     unzip wintun.zip
   fi
   if [ $PKGARCH = "x64" ]; then
@@ -382,7 +382,7 @@ sign_msi() {
   #Sign MSI
   if [[ "${SIGN}" == "sign" ]];
   then
-    cmd \""/c signtool sign /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a ${PKGNAME}-${PKGVERSION}-${PKGARCH}.msi"\"
+    cmd \""/c signtool sign /debug /v /tr http://timestamp.sectigo.com /td sha256 /fd sha256 /a ${PKGNAME}-${PKGVERSION}-${PKGARCH}.msi"\"
   fi
 }
 

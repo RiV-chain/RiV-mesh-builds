@@ -89,11 +89,13 @@ chmod +x /tmp/$PKGFOLDER/*.sh
 curent_dir=$(pwd)
 echo "current folder=$curent_dir"
 
-cd /tmp/$PKGFOLDER/ && MyCloudOS5_mksapkg -E -s -m WDMyCloudEX4100 && MyCloudOS5_mksapkg -E -s -m WDMyCloudMirror
+cd /tmp/$PKGFOLDER/ && MyCloudOS5_mksapkg -E -s -m WDMyCloudEX4100 && MyCloudOS5_mksapkg -E -s -m WDMyCloudMirror && MyCloudOS5_mksapkg -E -s -m MyCloudEX2Ultra
 
 cp /tmp/WDMyCloudEX4100_mesh_$PKGVERSION.bin* "$curent_dir"
 
 cp /tmp/WDMyCloudMirror_mesh_$PKGVERSION.bin* "$curent_dir"
+
+cp /tmp/MyCloudEX2Ultra_mesh_$PKGVERSION.bin* "$curent_dir"
 
 rm -rf /tmp/$PKGFOLDER
 

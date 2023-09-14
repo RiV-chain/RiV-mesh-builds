@@ -97,7 +97,7 @@ chmod -R u+rwX,go+rX,g-w /tmp/$PKGFOLDER
 
 curent_dir=$(pwd)
 
-cd /tmp/$PKGFOLDER/mesh && /opt/tomcat/tool/Qnap/bin/qbuild --force-config -v
+cd /tmp/$PKGFOLDER/mesh && qbuild --force-config -v
 
 mv build/*.qpkg "$curent_dir"/$PKGFILE
 
