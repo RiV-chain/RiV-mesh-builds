@@ -76,20 +76,7 @@ setup_wix() {
   pacman -S --needed --noconfirm unzip git curl
 
   # Download the wix tools!
-  if [ ! -d wixbin ];
-  then
-    curl --insecure -LO https://wixtoolset.org/downloads/v3.14.0.6526/wix314-binaries.zip
-    if [ `md5sum wix314-binaries.zip | cut -f 1 -d " "` != "aecd655bb56238d48ef5254cd4dc958e" ];
-    then
-      echo "wix package didn't match expected checksum"
-      exit 1
-    fi
-    mkdir -p wixbin
-    unzip -o wix314-binaries.zip -d wixbin || (
-    echo "failed to unzip WiX"
-    exit 1
-    )
-  fi
+  dotnet tool install --global wix --version 5.0.0
 }
 
 prepare_metadata() {
@@ -103,11 +90,11 @@ prepare_metadata() {
 
 copy_res(){
   #Build winres
-  go-winres simply --icon logos/riv.ico --file-version $PKGVERSION --file-description "RiV-mesh (c) service, 2023 RIV CHAIN" \
-  --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2023, RIV CHAIN"
+  go-winres simply --icon logos/riv.ico --file-version $PKGVERSION --file-description "RiV-mesh (c) service, 2024 RIV CHAIN" \
+  --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2024, RIV CHAIN"
   cp *.syso RiV-mesh/cmd/mesh
-  go-winres simply --file-version $PKGVERSION --file-description "RiV-mesh (c) CLI, 2023 RIV CHAIN" \
-  --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2023, RIV CHAIN" --manifest cli
+  go-winres simply --file-version $PKGVERSION --file-description "RiV-mesh (c) CLI, 2024 RIV CHAIN" \
+  --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2024, RIV CHAIN" --manifest cli
   cp *.syso RiV-mesh/cmd/meshctl
 }
 
@@ -116,6 +103,7 @@ build_mesh() {
   [ "${PKGARCH}" == "x64" ] && (cd RiV-mesh && GOOS=windows GOARCH=amd64 CGO_ENABLED=0 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ ./build)
   [ "${PKGARCH}" == "x86" ] && (cd RiV-mesh && GOOS=windows GOARCH=386 CGO_ENABLED=0 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ ./build)
   [ "${PKGARCH}" == "arm" ] && (cd RiV-mesh && GOOS=windows GOARCH=arm CGO_ENABLED=0 ./build)
+  [ "${PKGARCH}" == "arm64" ] && (cd RiV-mesh && GOOS=windows GOARCH=arm64 CGO_ENABLED=0 ./build)
 }
 
 sign_exe() {
@@ -128,6 +116,11 @@ prepare_msi_build() {
   if [ ! -d wintun ];
   then
     curl --insecure -o wintun.zip https://www.wintun.net/builds/wintun-0.14.1.zip
+    if [ `sha256sum wintun.zip | cut -f 1 -d " "` != "07c256185d6ee3652e09fa55c0b673e2624b565e02c4b9091c79ca7d2f24ef51" ];
+    then
+      echo "wintun package didn't match expected checksum"
+      exit 1
+    fi
     unzip wintun.zip
   fi
   if [ $PKGARCH = "x64" ]; then
@@ -136,8 +129,8 @@ prepare_msi_build() {
     PKGWINTUNDLL=wintun/bin/x86/wintun.dll
   elif [ $PKGARCH = "arm" ]; then
     PKGWINTUNDLL=wintun/bin/arm/wintun.dll
-  #elif [ $PKGARCH = "arm64" ]; then
-  #  PKGWINTUNDLL=wintun/bin/arm64/wintun.dll
+  elif [ $PKGARCH = "arm64" ]; then
+    PKGWINTUNDLL=wintun/bin/arm64/wintun.dll
   else
     echo "wasn't sure which architecture to get wintun for"
     exit 1
@@ -172,7 +165,7 @@ EOF
     PKGDISPLAYNAME="RiV-mesh Network"
   fi
 
-  [ "${PKGARCH}" == "x64" ] && \
+  ([ "${PKGARCH}" == "x64" ] || [ "${PKGARCH}" == "arm64" ]) && \
     PKGGUID="5bcfdddd-66a7-4eb7-b5f7-4a7500dcc65d" PKGINSTFOLDER="ProgramFiles64Folder" || \
     PKGGUID="cbf6ffa1-219e-4bb2-a0e5-74dbf1b58a45" PKGINSTFOLDER="ProgramFilesFolder"
 
@@ -195,7 +188,7 @@ cat > wix.xml << EOF
       Description="RiV-mesh Network Installer"
       Comments="RiV-mesh Network standalone router for Windows."
       Manufacturer="RiV-chain"
-      InstallerVersion="200"
+      InstallerVersion="500"
       InstallScope="perMachine"
       Languages="1033"
       Compressed="yes"
@@ -313,8 +306,8 @@ build_msi(){
   # Generate the MSI
   CANDLEFLAGS="-nologo"
   LIGHTFLAGS="-nologo -spdb -sice:ICE71 -sice:ICE61"
-  wixbin/candle $CANDLEFLAGS -out ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.wixobj -arch ${PKGARCH} wix.xml && \
-  wixbin/light $LIGHTFLAGS -ext WixUIExtension -ext WixUtilExtension -out ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.msi ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.wixobj
+  candle $CANDLEFLAGS -out ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.wixobj -arch ${PKGARCH} wix.xml && \
+  light $LIGHTFLAGS -ext WixUIExtension -ext WixUtilExtension -out ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.msi ${PKGNAME}-${PKGVERSION}-${PKGARCH}-nogui.wixobj
 }
 
 sign_msi() {
