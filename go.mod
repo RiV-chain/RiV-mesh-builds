@@ -9,7 +9,7 @@ require (
 	github.com/gologme/log v1.2.0
 	github.com/jchv/go-webview2 v0.0.0-20221223143126-dc24628cff85
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
-	github.com/webview/webview v0.0.0-20221220082822-77e021440a0f
+	github.com/webview/webview v0.0.0-20240911074850-6f281d56eb0d
 )
 
 require (
