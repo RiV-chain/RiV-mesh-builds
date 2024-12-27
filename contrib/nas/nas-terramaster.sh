@@ -54,7 +54,7 @@ cp contrib/ui/nas-terramaster/mesh /tmp/$PKGFOLDER/ -r
 cp -r -n contrib/ui/mesh-ui/ui/* /tmp/$PKGFOLDER/mesh/usr/local/mesh/www
 
 echo "Converting icon for: 120x120"
-convert -colorspace sRGB logos/riv.png -resize 120x120 PNG32:/tmp/$PKGFOLDER/mesh/usr/www/images/icons/mesh.png
+convert-im6.q16 -colorspace sRGB logos/riv.png -resize 120x120 PNG32:/tmp/$PKGFOLDER/mesh/usr/www/images/icons/mesh.png
 
 echo "$PKGVERSION" > /tmp/$PKGFOLDER/mesh/version
 

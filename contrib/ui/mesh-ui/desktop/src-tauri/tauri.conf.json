@@ -1,0 +1,53 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "mesh-ui",
+  "identifier": "org.rivchain.rivmesh",
+  "build": {
+    "devUrl": "http://localhost:19019/",
+    "frontendDist": "http://localhost:19019/"
+
+  },
+
+  "app": {
+
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "RiV Mesh",
+        "width": 500,
+        "height": 630
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+    "bundle": {
+
+    "active": true,
+    "targets": [], 
+    "icon": [
+      "../../../../../logos/riv.icns",
+      "../../../../../logos/riv.ico",
+      "../../../../../logos/riv.png"
+    ],
+    "linux": {
+      "deb": {
+        "depends": ["libwebkit2gtk-4.0-dev", "libgtk-3-dev"]
+      },
+      "rpm": {
+        "depends": ["webkit2gtk3", "gtk3"]
+      }
+    },
+    "macOS": {
+      "frameworks": [],
+      "entitlements": null,
+      "exceptionDomain": null    },
+    "windows": {
+
+      "wix": {
+        "language": "en-US"
+      }
+    }
+  }
+}

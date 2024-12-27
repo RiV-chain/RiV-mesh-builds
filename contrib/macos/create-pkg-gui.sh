@@ -16,20 +16,45 @@ command -v mkbom >/dev/null 2>&1 || (
   sudo make install || (echo "Failed to build mkbom"; exit 1)
 )
 
+get_rustarch() {
+  local PKGARCH=$1
+  local RUSTARCH
+
+  case "${PKGARCH}" in
+    "amd64")
+      RUSTARCH=x86_64
+      ;;
+    "arm64")
+      RUSTARCH=aarch64
+      ;;
+    *)
+      echo "Unsupported architecture: ${PKGARCH}" >&2
+      return 1
+      ;;
+  esac
+
+  echo "$RUSTARCH"
+  return 0
+}
+
+#could be static
 buildbin() {
-  #to use realpath install coreutils: $brew install coreutils
-  local CMD=$(realpath $1)
-  echo "Building: $CMD for $GOOS-$GOARCH"
+  local CMD=$(realpath "$1")
 
-  (cd "$TARGET_PATH" && go build $ARGS -ldflags "${LDFLAGS}${LDFLAGS2}" -gcflags "$GCFLAGS" "$CMD")
+  # Define RUSTOS
+  RUSTOS=apple-darwin
 
-  if [ $UPX ]; then
-    upx --brute "$CMD"
-  fi
+  # Set the RUSTRCH based on PKGARCH
+  RUSTARCH=$(get_rustarch "$PKGARCH")
+
+  echo "Building: $CMD for $RUSTOS-$RUSTARCH"
+
+  # Run the build command with the correct RUSTARCH and RUSTOS
+  (cd "$CMD" && cargo tauri build --target ${RUSTARCH}-${RUSTOS})
 }
 
 build_mesh_ui() {
-  buildbin ./contrib/ui/mesh-ui
+  buildbin ./contrib/ui/mesh-ui/desktop
 }
 
 GOOS=darwin
@@ -51,7 +76,7 @@ build_mesh_ui
 # the RiV-mesh repo and you have ran ./build
 test -f RiV-mesh/mesh || (echo "mesh binary not found"; exit 1)
 test -f RiV-mesh/meshctl || (echo "meshctl binary not found"; exit 1)
-test -f mesh-ui || (echo "mesh-ui binary not found"; exit 1)
+test -f contrib/ui/mesh-ui/desktop/src-tauri/target/${RUSTARCH}-apple-darwin/release/mesh-ui || (echo "mesh-ui binary not found"; exit 1)
 test -f contrib/macos/mesh.plist || (echo "contrib/macos/mesh.plist not found"; exit 1)
 test -f contrib/semver/version.sh || (echo "contrib/semver/version.sh not found"; exit 1)
 
@@ -71,7 +96,12 @@ mkdir -p pkgbuild/root/Library/LaunchDaemons
 # Copy package contents into the pkgbuild root
 cp RiV-mesh/meshctl pkgbuild/root/usr/local/bin
 cp RiV-mesh/mesh pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS
-cp mesh-ui pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS
+
+# Set the RUSTRCH based on PKGARCH
+RUSTARCH=$(get_rustarch "$PKGARCH")
+
+cp contrib/ui/mesh-ui/desktop/src-tauri/target/${RUSTARCH}-apple-darwin/release/mesh-ui pkgbuild/root/Applications/RiV-mesh.app/Contents/MacOS
+
 cp logos/riv.icns pkgbuild/root/Applications/RiV-mesh.app/Contents/Resources
 cp -r contrib/ui/mesh-ui/ui pkgbuild/root/Applications/RiV-mesh.app/Contents/Resources
 cp contrib/macos/mesh.plist pkgbuild/root/Library/LaunchDaemons
