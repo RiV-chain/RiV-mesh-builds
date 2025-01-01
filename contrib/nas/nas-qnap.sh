@@ -67,10 +67,10 @@ cp contrib/ui/nas-qnap/au/* /tmp/$PKGFOLDER/mesh/shared -r
 cp -r -n contrib/ui/mesh-ui/ui/* /tmp/$PKGFOLDER/mesh/shared/www/
 
 echo "Converting icon for: 64x64"
-convert -colorspace sRGB logos/riv.png -resize 64x64 /tmp/$PKGFOLDER/mesh/icons/mesh.gif
+convert-im6.q16 -colorspace sRGB logos/riv.png -resize 64x64 /tmp/$PKGFOLDER/mesh/icons/mesh.gif
 echo "Converting icon for: 80x80"
-convert -colorspace sRGB logos/riv.png -resize 80x80 /tmp/$PKGFOLDER/mesh/icons/mesh_80.gif
-convert -colorspace sRGB logos/riv.png -resize 64x64 /tmp/$PKGFOLDER/mesh/icons/mesh_gray.gif
+convert-im6.q16 -colorspace sRGB logos/riv.png -resize 80x80 /tmp/$PKGFOLDER/mesh/icons/mesh_80.gif
+convert-im6.q16 -colorspace sRGB logos/riv.png -resize 64x64 /tmp/$PKGFOLDER/mesh/icons/mesh_gray.gif
 
 cat > /tmp/$PKGFOLDER/mesh/qpkg.cfg << EOF
 QPKG_DISPLAY_NAME="RiV Mesh"

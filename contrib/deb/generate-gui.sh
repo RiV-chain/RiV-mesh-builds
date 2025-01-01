@@ -21,19 +21,48 @@ if [ $PKGBRANCH = "master" ]; then
   PKGREPLACES=mesh-develop
 fi
 
+get_rustarch() {
+  local PKGARCH=$1
+  local RUSTARCH
+
+  case "${PKGARCH}" in
+    "amd64")
+      RUSTARCH=x86_64
+      ;;
+    "i386")
+      RUSTARCH=i686
+      ;;
+    "arm64")
+      RUSTARCH=aarch64
+      ;;
+    *)
+      echo "Unsupported architecture: ${PKGARCH}" >&2
+      return 1
+      ;;
+  esac
+
+  echo "$RUSTARCH"
+  return 0
+}
+
+#could be static
 buildbin() {
-  local CMD=$(realpath $1)
-  echo "Building: $CMD for $GOOS-$GOARCH"
+  local CMD=$(realpath "$1")
 
-  (cd "$TARGET_PATH" && go build $ARGS -ldflags "${LDFLAGS}${LDFLAGS2}" -gcflags "$GCFLAGS" "$CMD")
+  # Define RUSTOS
+  RUSTOS=linux
 
-  if [ $UPX ]; then
-    upx --brute "$CMD"
-  fi
+  # Set the RUSTRCH based on PKGARCH
+  RUSTARCH=$(get_rustarch "$PKGARCH")
+
+  echo "Building: $CMD for $RUSTOS-$RUSTARCH"
+
+  # Run the build command with the correct RUSTARCH and RUSTOS
+  (cd "$CMD" && cargo tauri build --target ${RUSTARCH}-unknown-${RUSTOS}-gnu)
 }
 
 build_mesh_ui() {
-  buildbin ./contrib/ui/mesh-ui
+  buildbin ./contrib/ui/mesh-ui/desktop
 }
 
 GOOS=linux
@@ -41,8 +70,10 @@ if [ $PKGARCH = "amd64" ]; then
   GOARCH=amd64
 elif [ $PKGARCH = "i386" ]; then
   GOARCH=386
+elif [ $PKGARCH = "arm64" ]; then
+  GOARCH=aarch64
 else
-  echo "Specify PKGARCH=amd64 or i386"
+  echo "Specify PKGARCH=amd64, arm64 or i386"
   exit 1
 fi
 
@@ -67,11 +98,16 @@ chmod 0775 /tmp/$PKGNAME/ -R
 for resolution in 16x16 24x24 32x32 48x48 64x64 192x192 256x256 512x512; do
   echo "Converting icon for: $resolution"
   mkdir -p /tmp/$PKGNAME/usr/share/icons/hicolor/$resolution/apps && \
-  convert -colorspace sRGB logos/riv.png -resize $resolution PNG8:/tmp/$PKGNAME/usr/share/icons/hicolor/$resolution/apps/riv.png  && \
+  convert-im6.q16 -colorspace sRGB logos/riv.png -resize $resolution PNG8:/tmp/$PKGNAME/usr/share/icons/hicolor/$resolution/apps/riv.png && \
   chmod 644 /tmp/$PKGNAME/usr/share/icons/hicolor/$resolution/apps/riv.png
 done
 
 cp -r contrib/ui/mesh-ui/ui /tmp/$PKGNAME/usr/share/riv
+
+# Set the RUSTRCH based on PKGARCH
+RUSTARCH=$(get_rustarch "$PKGARCH")
+
+cp contrib/ui/mesh-ui/desktop/src-tauri/target/${RUSTARCH}-unknown-linux-gnu/release/mesh-ui .
 
 cat > /tmp/$PKGNAME/usr/share/applications/riv.desktop << EOF
 [Desktop Entry]

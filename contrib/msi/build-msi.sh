@@ -40,16 +40,44 @@ if [ -z $TABLES ] && [ -z $DEBUG ]; then
   LDFLAGS="$LDFLAGS -s -w"
 fi
 
+get_rustarch() {
+  local PKGARCH=$1
+  local RUSTARCH
+
+  case "${PKGARCH}" in
+    "x64")
+      RUSTARCH=x86_64
+      ;;
+    "x86")
+      RUSTARCH=i686
+      ;;
+    "arm64")
+      RUSTARCH=aarch64
+      ;;
+    *)
+      echo "Unsupported architecture: ${PKGARCH}" >&2
+      return 1
+      ;;
+  esac
+
+  echo "$RUSTARCH"
+  return 0
+}
+
 #could be static
 buildbin() {
-  local CMD=$(realpath $1)
-  echo "Building: $CMD for $GOOS-$GOARCH"
+  local CMD=$(realpath "$1")
 
-  (cd "$TARGET_PATH" && go build $ARGS -ldflags "${LDFLAGS}${LDFLAGS2}" -gcflags "$GCFLAGS" "$CMD")
+  # Define RUSTOS
+  RUSTOS=windows
 
-  if [ $UPX ]; then
-    upx --brute "$CMD"
-  fi
+  # Set the RUSTRCH based on PKGARCH
+  RUSTARCH=$(get_rustarch "$PKGARCH")
+
+  echo "Building: $CMD for $RUSTOS-$RUSTARCH"
+
+  # Run the build command with the correct RUSTARCH and RUSTOS
+  (cd "$CMD" && cargo tauri build --target ${RUSTARCH}-pc-${RUSTOS}-msvc)
 }
 
 setup_repo() {
@@ -90,11 +118,11 @@ prepare_metadata() {
 
 copy_res(){
   #Build winres
-  go-winres simply --icon logos/riv.ico --file-version $PKGVERSION --file-description "RiV-mesh (c) service, 2024 RIV CHAIN" \
-  --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2024, RIV CHAIN"
+  go-winres simply --icon logos/riv.ico --file-version $PKGVERSION --file-description "RiV-mesh (c) service, 2025 RIV CHAIN" \
+  --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2025, RIV CHAIN"
   cp *.syso RiV-mesh/cmd/mesh
-  go-winres simply --file-version $PKGVERSION --file-description "RiV-mesh (c) CLI, 2024 RIV CHAIN" \
-  --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2024, RIV CHAIN" --manifest cli
+  go-winres simply --file-version $PKGVERSION --file-description "RiV-mesh (c) CLI, 2025 RIV CHAIN" \
+  --product-version $PKGVERSION --product-name "RiV-mesh" --copyright "Copyright (c) 2025, RIV CHAIN" --manifest cli
   cp *.syso RiV-mesh/cmd/meshctl
 }
 
@@ -102,7 +130,6 @@ build_mesh() {
   # Build Mesh!
   [ "${PKGARCH}" == "x64" ] && (cd RiV-mesh && GOOS=windows GOARCH=amd64 CGO_ENABLED=0 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ ./build)
   [ "${PKGARCH}" == "x86" ] && (cd RiV-mesh && GOOS=windows GOARCH=386 CGO_ENABLED=0 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ ./build)
-  [ "${PKGARCH}" == "arm" ] && (cd RiV-mesh && GOOS=windows GOARCH=arm CGO_ENABLED=0 ./build)
   [ "${PKGARCH}" == "arm64" ] && (cd RiV-mesh && GOOS=windows GOARCH=arm64 CGO_ENABLED=0 ./build)
 }
 
@@ -127,8 +154,6 @@ prepare_msi_build() {
     PKGWINTUNDLL=wintun/bin/amd64/wintun.dll
   elif [ $PKGARCH = "x86" ]; then
     PKGWINTUNDLL=wintun/bin/x86/wintun.dll
-  elif [ $PKGARCH = "arm" ]; then
-    PKGWINTUNDLL=wintun/bin/arm/wintun.dll
   elif [ $PKGARCH = "arm64" ]; then
     PKGWINTUNDLL=wintun/bin/arm64/wintun.dll
   else
@@ -165,9 +190,24 @@ EOF
     PKGDISPLAYNAME="RiV-mesh Network"
   fi
 
-  ([ "${PKGARCH}" == "x64" ] || [ "${PKGARCH}" == "arm64" ]) && \
-    PKGGUID="5bcfdddd-66a7-4eb7-b5f7-4a7500dcc65d" PKGINSTFOLDER="ProgramFiles64Folder" || \
-    PKGGUID="cbf6ffa1-219e-4bb2-a0e5-74dbf1b58a45" PKGINSTFOLDER="ProgramFilesFolder"
+case "${PKGARCH}" in
+  "x64")
+    PKGGUID="5bcfdddd-66a7-4eb7-b5f7-4a7500dcc65d"
+    PKGINSTFOLDER="ProgramFiles64Folder"
+    ;;
+  "x86")
+    PKGGUID="cbf6ffa1-219e-4bb2-a0e5-74dbf1b58a45"
+    PKGINSTFOLDER="ProgramFilesFolder"
+    ;;
+  "arm64")
+    PKGGUID="a5a03811-6607-42da-b8d6-561e14b68d87"
+    PKGINSTFOLDER="ProgramFiles64Folder"
+    ;;
+  *)
+    echo "Unknown architecture: ${PKGARCH}"
+    exit 1
+    ;;
+esac
 
 # Generate the wix.xml file
 cat > wix.xml << EOF

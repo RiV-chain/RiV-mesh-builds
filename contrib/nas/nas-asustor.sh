@@ -52,7 +52,7 @@ cp contrib/ui/nas-asustor/* /tmp/$PKGFOLDER/ -r
 cp -r -n contrib/ui/mesh-ui/ui/* /tmp/$PKGFOLDER/www/
 
 echo "Converting icon for: 90x90"
-convert -colorspace sRGB logos/riv.png -resize 90x90 PNG32:/tmp/$PKGFOLDER/CONTROL/icon.png
+convert-im6.q16 -colorspace sRGB logos/riv.png -resize 90x90 PNG32:/tmp/$PKGFOLDER/CONTROL/icon.png
 chmod 644 /tmp/$PKGFOLDER/CONTROL/icon.png
 
 cat > /tmp/$PKGFOLDER/CONTROL/config.json << EOF

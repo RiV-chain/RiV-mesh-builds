@@ -50,7 +50,7 @@ chmod 0775 /tmp/$PKGNAME/ -R
 
 for resolution in 150x150; do
   echo "Converting icon for: $resolution"
-  convert -colorspace sRGB logos/riv.png -resize $resolution PNG32:/tmp/$PKGNAME/apps/mesh/logo.png  && \
+  convert-im6.q16 -colorspace sRGB logos/riv.png -resize $resolution PNG32:/tmp/$PKGNAME/apps/mesh/logo.png  && \
   chmod 644 /tmp/$PKGNAME/apps/mesh/logo.png
 done
 

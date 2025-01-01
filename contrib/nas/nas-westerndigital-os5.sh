@@ -51,7 +51,7 @@ cp -r -n contrib/ui/mesh-ui/ui/* /tmp/$PKGFOLDER/www/
 
 for resolution in 256x256; do
   echo "Converting icon for: $resolution"
-  convert -colorspace sRGB logos/riv.png -resize $resolution PNG32:/tmp/$PKGFOLDER/ui/mesh.png  && \
+  convert-im6.q16 -colorspace sRGB logos/riv.png -resize $resolution PNG32:/tmp/$PKGFOLDER/ui/mesh.png  && \
   chmod 644 /tmp/$PKGFOLDER/www/mesh.png
 done
 
