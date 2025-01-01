@@ -12,9 +12,47 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pkgarch: ["amd64"]
+        pkgarch: ["amd64", "i386", "arm64"]
 
     name: Package (Debian, ${{ matrix.pkgarch }})
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: 'true'
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+      
+      - name: Prepare dependencies
+        run: |
+          go install github.com/swaggo/swag/cmd/swag@latest
+
+      - name: Build package
+        env:
+          PKGARCH: ${{ matrix.pkgarch }}
+        run: |
+          PKGARCH=${{ matrix.pkgarch }} sh ./contrib/deb/generate.sh
+          PKGARCH=${{ matrix.pkgarch }} sh ./contrib/deb/generate-vpn.sh
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Debian package (${{ matrix.pkgarch }})
+          path: "*.deb"
+          if-no-files-found: error
+
+  build-packages-debian-ui:
+    strategy:
+      fail-fast: false
+      matrix:
+        pkgarch: ["amd64"]
+
+    name: Package UI (Debian, ${{ matrix.pkgarch }})
 
     runs-on: ubuntu-latest
     steps:
@@ -40,22 +78,18 @@ jobs:
         run: |
           go install github.com/swaggo/swag/cmd/swag@latest
           cargo install tauri-cli
-          #rustup target add i686-unknown-linux-gnu
-          #rustup target add aarch64-unknown-linux-gnu
 
       - name: Build package
         env:
           PKGARCH: ${{ matrix.pkgarch }}
         run: |
-          PKGARCH=${{ matrix.pkgarch }} sh ./contrib/deb/generate.sh
           PKGARCH=${{ matrix.pkgarch }} sh ./contrib/deb/generate-gui.sh
-          PKGARCH=${{ matrix.pkgarch }} sh ./contrib/deb/generate-vpn.sh
           PKGARCH=${{ matrix.pkgarch }} sh ./contrib/deb/generate-vpn-gui.sh
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Debian package (${{ matrix.pkgarch }})
+          name: Debian package UI (${{ matrix.pkgarch }})
           path: "*.deb"
           if-no-files-found: error
 
